@@ -1,0 +1,114 @@
+#!/usr/bin/env osascript -l JavaScript
+
+/*
+  BE SURE THAT THE FOLLOWING IS CHECKED (TURNED ON) in System Preferences > Dictation & Speech > Text to Speech:
+      "Speak selected text when the key is pressed"
+  IF YOU HAVE *NOT* CUSTOMIZED THE DEFAULT KEYBOARD SHORTCUT - Option-Escape - NO FURTHER ACTION IS NEEDED.
+  OTHERWISE:
+  Specify the custom keyboard shortcut chosen below.
+  For a list of key codes:
+    - see http://www.codemacs.com/coding/applescript/applescript-key-codes-reference.8288271.htm
+    - OR use the free Key Codes application (https://itunes.apple.com/us/app/key-codes/id414568915?mt=12)
+*/
+keyCode = 53  // 53 == ESC
+optsModifiers = { using: [ 'option down' ] }; // a combination of 'option down', 'command down', 'control down', and 'shift down' - including the single quotes, and separated with commas.
+
+// Global variables
+var app = Application.currentApplication(); app.includeStandardAdditions = true
+var se = Application('System Events')
+
+function run(argv) {
+
+  if (argv[0] === '-h' || argv[0] === '--help') {
+      console.log("\
+toggleSpeaking [voiceName]\n\
+\n\
+  Invokes the 'Speak selected text' system TTS service, optionally with a specific\n\
+  voice.\n\
+\n\
+  NOTE: Use of this script only makes sense when invoked via a global keyboard\n\
+        shortcut or from an app like Alfred 2.\n\
+        Prerequisites:\n\
+         * In System Preferences > Dictation & Speech > Text to Speech,\n\
+           'Speak selected text when the key is pressed' must be ON.\n\
+         * This script assumes that the DEFAULT KEYBOARD SHORTCUT - OPTION-ESCAPE\n\
+           - is in effect; IF NOT, you must EDIT THIS SCRIPT.\n\
+\n\
+  This is effectively a toggle: on first call, speaking starts; if called while\n\
+  still speaking, speaking stops.\n\
+\n\
+  Note that the target voice, if specified, must become the *new default voice*,\n\
+  because said system service invariably speaks with the default voice.\n\
+")
+      ObjC.import('stdlib')
+      $.exit(0)
+  }
+
+  doIt(argv[0])
+  
+}
+
+function doIt(voice) {
+
+  if (!voice) voice = getDefaultVoiceName()
+
+    // BE SURE THAT THE FOLLOWING IS CHECKED (TURNED ON) in System Preferences > Dictation & Speech > Text to Speech:
+    //     "Speak selected text when the key is pressed"
+      // IF YOU HAVE *NOT* CUSTOMIZED THE DEFAULT KEYBOARD SHORTCUT - Option-Escape - NO FURTHER ACTION IS NEEDED.
+    // OTHERWISE:
+    // Specify the custom keyboard shortcut chosen below.
+    // For a list of key codes:
+    //   - see http://www.codemacs.com/coding/applescript/applescript-key-codes-reference.8288271.htm
+    //   - OR use the free Key Codes application (https://itunes.apple.com/us/app/key-codes/id414568915?mt=12)
+  keyCode = 53  // 53 == ESC
+  optsModifiers = { using: [ 'option down' ] }; // a combination of 'option down', 'command down', 'control down', and 'shift down' - including the single quotes, and separated with commas.
+
+
+  // Create case-insensitive regex; the letter case in the bundle ID sometimes differs from the display name in System Preferences.
+  // Also note the 1 exception: 'Pipe Organ' is represented as 'Organ' in the bundle Id.
+  reTargetVoiceName = new RegExp(voice === 'Pipe Organ' ? 'Organ' : voice, 'i') 
+
+  // -- global vars
+  var app = Application.currentApplication(); app.includeStandardAdditions = true
+  var se = Application('System Events')
+
+  try {
+
+    if (! reTargetVoiceName.test(getDefaultVoiceName())) { // Is the target voice NOT the current default voice?
+
+    // Make the target voice the new default voice:
+    app.doShellScript('./voices -q -d "' + voice + '"')
+
+  }
+
+  // Invoke the system's "Speak selected text when the key is pressed" service.
+  // If it's currently already speaking, playback is stopped.
+  toggleSpeaking()
+
+  } catch(e) { reportErr(e) }
+
+}
+
+// Invoke the keyboard shortcut for the system's 'Speak selected text when the key is pressed' feature.
+// Starts speaking, or, if speech is ongoing, stops speaking.
+function toggleSpeaking() {
+  se.keyCode(keyCode, optsModifiers)
+}
+
+function reportErr(e) {
+  app.displayAlert(e.message, { as: 'critical' })
+}
+
+// Returns the default TTS voice's *name*, extracted from its *bundle ID*.
+// Note that the letter case doesn't always reflect the case as shown in System
+// Preferences (e.g., 'steffi' vs. 'Steffi')
+// EXAMPLE
+//   getDefaultVoiceName() // -> e.g., 'Alex'   (extracted from bundle ID 'com.apple.speech.synthesis.voice.Alex')
+//   getDefaultVoiceName() // -> e.g., 'steffi' (extracted from bundle ID 'com.apple.speech.synthesis.voice.steffi.premium')
+function getDefaultVoiceName() {
+  ObjC.import('AppKit')
+  return $.NSSpeechSynthesizer.defaultVoice.js
+    .replace(/\.premium$/, '')
+    .replace(/^.+\.(.+)$/, '$1')
+    .replace(/^organ$/i, 'Pipe Organ') // The 1 EXCEPTION: display name 'Pipe Organ' maps to 'Organ' in the bundle name.
+}

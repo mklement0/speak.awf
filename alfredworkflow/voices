@@ -1,0 +1,944 @@
+#!/usr/bin/env bash
+
+# --- STANDARD SCRIPT-GLOBAL CONSTANTS
+
+kTHIS_NAME=${BASH_SOURCE##*/}
+kTHIS_HOMEPAGE='https://github.com/mklement0/voices'
+kTHIS_VERSION='v0.2.3' # NOTE: This assignment is automatically updated by `make version VER=<newVer>` - DO keep the 'v' prefix.
+
+unset CDPATH  # To prevent unexpected `cd` behavior.
+
+# --- Begin: STANDARD HELPER FUNCTIONS
+
+die() { echo "$kTHIS_NAME: ERROR: ${1:-"ABORTING due to unexpected error."}" 1>&2; exit ${2:-1}; }
+dieSyntax() { echo "$kTHIS_NAME: ARGUMENT ERROR: ${1:-"Invalid argument(s) specified."} Use -h for help." 1>&2; exit 2; }
+
+# SYNOPSIS
+#   openUrl <url>
+# DESCRIPTION
+#   Opens the specified URL in the system's default browser.
+openUrl() {
+  local url=$1 platform=$(uname) cmd=()
+  case $platform in
+    'Darwin') # OSX
+      cmd=( open "$url" )
+      ;;
+    'CYGWIN_'*) # Cygwin on Windows; must call cmd.exe with its `start` builtin
+      cmd=( cmd.exe /c start '' "$url " )  # !! Note the required trailing space.
+      ;;
+    'MINGW32_'*) # MSYS or Git Bash on Windows; they come with a Unix `start` binary
+      cmd=( start '' "$url" )
+      ;;
+    *) # Otherwise, assume a Freedesktop-compliant OS, which includes many Linux distros, PC-BSD, OpenSolaris, ...
+      cmd=( xdg-open "$url" )
+      ;; 
+  esac
+  "${cmd[@]}" || { echo "Cannot locate or failed to open default browser; please go to '$url' manually." >&2; return 1; }
+}
+
+# Prints the embedded Markdown-formatted man-page source to stdout.
+printManPageSource() {
+  sed -n -e $'/^: <<\'EOF_MAN_PAGE\'/,/^EOF_MAN_PAGE/ { s///; t\np;}' "$BASH_SOURCE"
+}
+
+# Opens the man page, if installed; otherwise, tries to display the embedded Markdown-formatted man-page source; if all else fails: tries to display the man page online.
+openManPage() {
+  local pager embeddedText 
+  if ! man 1 "$kTHIS_NAME" 2>/dev/null; then
+    # 2nd attempt: if present, display the embedded Markdown-formatted man-page source
+    embeddedText=$(printManPageSource)
+    if [[ -n $embeddedText ]]; then
+      pager='more'
+      command -v less &>/dev/null && pager='less' # see if the non-standard `less` is available, because it's preferable to the POSIX utility `more`
+      printf '%s\n' "$embeddedText" | "$pager"
+    else # 3rd attempt: open the the man page on the utility's website
+      openUrl "${kTHIS_HOMEPAGE}/doc/${kTHIS_NAME}.md"
+    fi
+  fi  
+}
+
+# Prints the contents of the synopsis chapter of the embedded Markdown-formatted man-page source for quick reference.
+printUsage() {
+  local embeddedText
+  # Extract usage information from the SYNOPSIS chapter of the embedded Markdown-formatted man-page source.
+  embeddedText=$(sed -n -e $'/^: <<\'EOF_MAN_PAGE\'/,/^EOF_MAN_PAGE/!d; /^## SYNOPSIS$/,/^#/{ s///; t\np; }' "$BASH_SOURCE")
+  if [[ -n $embeddedText ]]; then
+    # Print extracted synopsis chapter - remove backticks for uncluttered display.
+    printf '%s\n\n' "$embeddedText" | tr -d '`'
+  else # No SYNOPIS chapter found; fall back to displaying the man page.
+    echo "WARNING: usage information not found; opening man page instead." >&2
+    openManPage
+  fi
+}
+
+# --- End: STANDARD HELPER FUNCTIONS
+
+# ---  PROCESS STANDARD, OUTPUT-INFO-THEN-EXIT OPTIONS.
+case $1 in
+  --version)
+    # Output version number and exit, if requested.
+    echo "$kTHIS_NAME $kTHIS_VERSION"$'\nFor license information and more, visit '"$kTHIS_HOMEPAGE"; exit 0
+    ;;
+  -h|--help)
+    # Print usage information and exit.
+    printUsage; exit
+    ;;
+  --man)
+    # Display the manual page and exit, falling back to printing the embedded man-page source.
+    openManPage; exit
+    ;;
+  --man-source) # private option, used by `make update-man`
+    # Print raw, embedded Markdown-formatted man-page source and exit
+    printManPageSource; exit
+    ;;
+  --home)
+    # Open the home page and exit.
+    openUrl "$kTHIS_HOMEPAGE"; exit
+    ;;
+esac
+
+# ---- Begin: FUNCTIONS
+
+# See also: getVoiceInternals()
+getLegacyVoiceInternals() {
+
+  local internalVoiceName=$1
+
+  # --- Begin: list of numeric creator and voice IDs for *legacy* voices.
+  # Note: Obtained by systematically making each legacy voice that is preinstalled on a US-English OS X 10.8.3 the default voice
+  #       and then examining ~/Library/Preferences/com.apple.speech.voice.prefs.plist
+  #       Legacy voices are those that do not have VoiceAttributes/VoiceSynthesizerNumericID and VoiceAttributes:VoiceNumericID keys in their
+  #       respective /System/Library/Speech/Voices/${voiceNameNoSpaces}.SpeechVoice/Contents/Info.plist files.
+  #       !! There is 1 EXCEPTION: The voice that System Preferences and its preferences file call "Pipe Organ" is just named 
+  #       !! "Organ" in the actual voice bundle's path and Info.plist file.
+  VoiceCreator_Agnes=1734437985
+  VoiceID_Agnes=300
+  VoiceCreator_Albert=1836346163
+  VoiceID_Albert=41
+  VoiceCreator_Alex=1835364215
+  VoiceID_Alex=201
+  VoiceCreator_BadNews=1836346163
+  VoiceID_BadNews=36
+  VoiceCreator_Bahh=1836346163
+  VoiceID_Bahh=40
+  VoiceCreator_Bells=1836346163
+  VoiceID_Bells=26
+  VoiceCreator_Boing=1836346163
+  VoiceID_Boing=16
+  VoiceCreator_Bruce=1734437985
+  VoiceID_Bruce=100
+  VoiceCreator_Bubbles=1836346163
+  VoiceID_Bubbles=50
+  VoiceCreator_Cellos=1836346163
+  VoiceID_Cellos=35
+  VoiceCreator_Deranged=1836346163
+  VoiceID_Deranged=38
+  VoiceCreator_Fred=1836346163
+  VoiceID_Fred=1
+  VoiceCreator_GoodNews=1836346163
+  VoiceID_GoodNews=39
+  VoiceCreator_Hysterical=1836346163
+  VoiceID_Hysterical=30
+  VoiceCreator_Junior=1836346163
+  VoiceID_Junior=4
+  VoiceCreator_Kathy=1836346163
+  VoiceID_Kathy=2
+  VoiceCreator_Organ=1836346163 # !! Shows up as "*Pipe *Organ" in System Preferences and preferences file.
+  VoiceID_Organ=31
+  VoiceCreator_Princess=1836346163
+  VoiceID_Princess=3
+  VoiceCreator_Ralph=1836346163
+  VoiceID_Ralph=5
+  VoiceCreator_Trinoids=1836346163
+  VoiceID_Trinoids=9
+  VoiceCreator_Vicki=1835364215
+  VoiceID_Vicki=200
+  VoiceCreator_Victoria=1734437985
+  VoiceID_Victoria=200
+  VoiceCreator_Whisper=1836346163
+  VoiceID_Whisper=6
+  VoiceCreator_Zarvox=1836346163
+  VoiceID_Zarvox=8
+  # --- End: list of numeric creator and voiced IDs for *legacy* voices
+
+  vName_VoiceCreator="VoiceCreator_$internalVoiceName"
+  vName_VoiceID="VoiceID_$internalVoiceName"
+
+  VoiceCreator=${!vName_VoiceCreator}
+  VoiceID=${!vName_VoiceID}
+
+}
+
+
+# Determines the internal identifiers of a voice, given as its friendly name,
+# as (partially) needed to set a given voice as the default voice.
+# *Sets* the following *script-global variables*:
+#   InternalVoiceName
+#   VoiceCreator
+#   VoiceID
+#   BundleID
+getVoiceInternals() {
+
+  local friendlyVoiceName=$1 plistFile internalVoiceName
+
+  # Get the internal voice name - note that this one may not be case-exact,
+  # which is why we extract the exact case from the Info.plist file below
+  # and store in global var. $InternalVoiceName (note the uppercase first letter).
+  internalVoiceName=$(friendlyToInternalVoiceName "$friendlyVoiceName")
+
+  # Locate the voice-specific Info.plist file (as of OS X 10.8.3)
+  #       !! We assume a case-insensitive filesystem.
+  plistFile="/System/Library/Speech/Voices/${internalVoiceName}.SpeechVoice/Contents/Info.plist"
+  # !! As of at least 10.10, there are compressed variants that have root folder-name suffix 'Compact'.
+  # !! These are lower-quality versions with smaller footprint; we use them only if the higher-quality ones aren't available.
+  [[ ! -f $plistFile ]] && plistFile="/System/Library/Speech/Voices/${internalVoiceName}Compact.SpeechVoice/Contents/Info.plist"
+
+  # If (ultimately) not found, abort.
+  [[ -f $plistFile ]] || die "'$friendlyVoiceName' is not an installed voice."
+
+  # Determine the relevant IDs we need to switch the default voice.
+  # Note: We're setting *script-global* variables here.
+  InternalVoiceName=$(/usr/libexec/PlistBuddy -c "print :CFBundleName" $plistFile) || die "Voice '$friendlyVoiceName': failed to obtain internal voice name."
+  # !! For *compact* voices, $InternalVoiceNames will have suffix 'Compact', which we remove here, because
+  # !! this suffix shows up nowhere else.
+  # !! Key CFBundleName contains the same value as key VoiceName; however, only recent voices have the latter.
+  # !! Similarly, only recent voices have key VoiceNameRoot, which, in the case of compact voices, also contains the voice name with suffix 'Compact' removed.
+  InternalVoiceName=${InternalVoiceName%Compact}
+
+  VoiceCreator=$(/usr/libexec/PlistBuddy -c "print :VoiceAttributes:VoiceSynthesizerNumericID" "$plistFile" 2>/dev/null) 
+  if [[ $? -ne 0 ]]; then # Must be a *legacy* voice - we take VoiceCreator and VoiceID from a hard-coded list.
+    getLegacyVoiceInternals "$InternalVoiceName"
+    [[ -n $VoiceCreator && -n $VoiceID ]] || die "Voice '$friendlyVoiceName': failed to obtain numeric creator and/or voice IDs."
+  else
+    VoiceID=$(/usr/libexec/PlistBuddy -c "print :VoiceAttributes:VoiceNumericID" "$plistFile" 2>/dev/null) || die "Voice '$friendlyVoiceName': failed to obtain numeric voice ID."
+  fi
+
+  BundleID=$(/usr/libexec/PlistBuddy -c "print :CFBundleIdentifier" $plistFile) || die "Voice '$friendlyVoiceName': failed to obtain bundle ID."
+
+}
+
+
+
+# List all *installed* voices (whether active or not).
+# Returns the output from `say -v \?`.
+listInstalledVoices() {
+  say -v \? || die "Failed to list installed voices."
+}
+
+
+# List all *active* voices (typically a *subset* of all installed voices, selected by the user for active use via System Preferenes > Dictation & Speech).
+# Returns filtered output from `say -v \?`.
+listActiveVoices() {
+  listInstalledVoices | grep -Ei "$(printf '^%s \n' "$(getActiveVoiceNames)")"
+}
+
+# SYNOPSIS
+#  getVoiceNamesByLangId [-a] langIdPrefix...
+# DESCRIPTION
+#  Returns the friendly names of all active (by default) or installed (-a) voices.
+#  whose language ID matches the specified language-ID prefixes (case-insensitively).
+getVoiceNamesByLangId() {
+  local allInstalled=0
+  [[ $1 == '-a' ]] && { allInstalled=1; shift; }
+  # The output of listActiveVoices/listInstalledVoices - via `say -v \?` - is <friendlyVoiceName> <langId> # <demoText>
+  # The difficulty is that friendlyVoiceName may contain embedded spaces, so we need to match accordingly.
+  # On output we separate by $'\t' to simplify lang-ID matching and returning only the 1st field (the voice name).
+  { (( allInstalled )) && listInstalledVoices || listActiveVoices; } | sed -E 's/^(.*[^ ]) +([^ #]+) +#/\1'$'\t''\2/' | grep -Ei "$(printf '\t%s.*\n' "$@")" | cut -d $'\t' -f1 
+}
+
+# Prints the internal identifiers for the specified voice in the following form:
+# "InternalVoiceName=<value> VoiceCreator=<value> VoiceID=<value>"
+printVoiceInternals() {
+  getVoiceInternals "$1"
+  local v result=''
+  for v in InternalVoiceName VoiceCreator VoiceID BundleID; do
+    [[ -z $result ]] && result="$v=${!v}" || result+=" $v=${!v}"
+  done
+  echo "$result"
+}
+
+# Outputs the friendly voice names of all *installed* voices, irrespective of whether the
+# user chose them for active use by placing a checkmark next to them in System Preferences > Dictation & Speech.
+getInstalledVoiceNames() {
+  # say -v \? prints all installed voices with their friendly names in the 1st column; the challenge is that the may contain embedded spaces.
+  say -v \? | sed -E 's/^(.*[^ ]) +([^ #]+) +#.*/\1/'
+}
+
+# Outputs the friendly voice names of those voices that are currently *active*.
+# Active voices are the *subset* of all *installed* voices that the user chose to actively work with 
+# by placing a checkmark next to them in System Preferences > Dictation & Speech
+# (the ones that show up directly in the pop-up list - as opposed to the ones only visible when you choose 'Customize...' in that list).
+getActiveVoiceNames() {
+
+  local FILE_PREFS="$HOME/Library/Preferences/com.apple.speech.voice.prefs.plist"
+    # !! As of OS X 10.8.3: The list of voices that are *active by default* (and thus also preinstalled).
+  local ACTIVE_BY_DEFAULT=$(cat <<'EOF'
+com.apple.speech.synthesis.voice.Alex
+com.apple.speech.synthesis.voice.Bruce
+com.apple.speech.synthesis.voice.Fred
+com.apple.speech.synthesis.voice.Kathy
+com.apple.speech.synthesis.voice.Vicki
+com.apple.speech.synthesis.voice.Victoria
+EOF
+)
+  local activeNonDefaults deactivatedDefaults activeDefaults active
+
+  if [[ -f $FILE_PREFS ]]; then
+
+    local re='^\s+com\.apple\.speech\.synthesis\.voice\.[^ ]+ = '
+
+      # Get all *explicitly activated* voices, *except those that are active *by default*.
+      # These are voices that were explicitly selected by the user (and downloaded in the process.)
+      # Note that we do NOT include voices from the set of those that are active by default (which also may show up with flag value 1 once their status has 
+      # been toggled by user action), as we deal with them later.
+    activeNonDefaults=$(/usr/libexec/PlistBuddy -c 'print' "$FILE_PREFS" | grep -E "$re"'1$' | awk '{ print $1 }' | fgrep -xv "$ACTIVE_BY_DEFAULT")
+
+      # Get the list of *explicitly deactivated* voices among the *active-by-default* ones.
+    deactivatedDefaults=$(/usr/libexec/PlistBuddy -c 'print' "$FILE_PREFS" | grep -E "$re"'0$' | awk '{ print $1 }' | fgrep -x "$ACTIVE_BY_DEFAULT")
+
+    # pv activeNonDefaults deactivatedDefaults
+
+    if [[ -n $deactivatedDefaults ]]; then
+        # Remove them from the list of active-by-default ones.
+        # In effect: get the list of those active-by-default voices that are *currently* active.
+      activeDefaults=$(echo "$ACTIVE_BY_DEFAULT" | fgrep -xv "$deactivatedDefaults")
+    else
+      activeDefaults=$ACTIVE_BY_DEFAULT
+    fi
+
+      # Now merge the activate non-defaults and the non-deactivated active-by-default ones
+      # to yield the effective list of active voices:
+    active=$activeDefaults
+    [[ -n $active ]] && active+=$'\n'
+    active+=$activeNonDefaults
+
+  else
+      # No prefs. file (pristine installation of OSX): use the defaults.
+    active=$ACTIVE_BY_DEFAULT
+  fi
+
+    # Extract the internal names from the bundle IDs - note that premium voices have ".premium" as a suffix -
+    # and output the friendly equivalents of the internal names.
+  echo "$active" | awk -F '\.' '{ sub("\.premium$", ""); print $NF }' | internalToFriendlyVoiceName
+
+}
+
+# SYNOPSIS
+#   internalToFriendlyVoiceName [internalName...]
+# DESCRIPTION
+#   Translates internal voice names to friendly voice names.
+#   Internal names may be supplied as operands or via stdin (line by line).
+#   Output is always line-based, with each friendly voice name output on its own line.
+#
+# Internal voice names occur in the following places:
+#   - as part of bundle IDs stored in keys inside ~/Library/Preferences/com.apple.speech.voice.prefs.plist
+#   - as folder names in /System/Library/Speech/Voices/{internalVoiceName}(Compact)?.SpeechVoice
+#   - in these folders' ./Contents/Info.plist files as the values of CFBundleName/VoiceName/VoiceNameRoot keys
+#     - VoiceNameRoot, if present contains the mere internal voice name (stripped of any 'Compact' suffix)
+#     - VoiceName, if present, and CFBundleName do have the 'Compact' suffix for low-quality voices, if applicable.
+#     - Legacy voices only have the CFBundleName key, without ever having suffix 'Compact'.
+#      
+# Friendly voice names occur in the following places:
+#  - in System Preferences, in the TTS (Dictation & Speech) and VoiceOver (Accessibility) settings
+#  - in the output of `say -v \?`
+#  - in the 'SelectedVoiceName' value of the com.apple.speech.voice.prefs preferences file.
+# 
+#   !! Translation is simplified based on the following assumptions:
+#   !! A friendly name is the same as the internal name except for the following legacy novelty voices:
+#   !!  Organ -> 'Pipe Organ' 
+#   !!  GoodNews -> 'Good News'
+#   !! These mappings aren't stored explicitly anywhere I could discover; with 'GoodNews' one could suspect word separation
+#   !! based on camel-case, but that doesn't apply to 'Organ'.
+#   !! Note that we assume that friendly voice names are case-INsensitive so that extracting internal and ultimately friendly
+#   !! names from bundle ID - which are typically all-lowercase - is acceptable. E.g., the assumption is that the system
+#   !! treats 'anna' the same as 'Anna'.
+#   !! Note that guessing the case based on capitalizing the initial letter and the 1st letter following a '-' would not work in all cases:
+#   !! cf. 'Mei-Jia' (Tawain) and 'Sin-ji' (Hong Kong). To truly get the friendly name, it would have to be derived from 
+#   !! multiple keys in /System/Library/Speech/Voices/{internalVoiceName}(Compact)?.SpeechVoice/Contents/Info.plist.
+internalToFriendlyVoiceName() (
+  shopt -s nocasematch
+  while read -r internalName; do
+    case $internalName in
+      organ)
+        echo "Pipe Organ"
+        ;;
+      goodnews)
+        echo "Good News"
+        ;;
+      *)
+        echo "$internalName"
+        ;;
+    esac
+  done < <( (( $# > 0 )) && printf '%s\n' "$@" || cat )
+)
+
+# Inverse of internalToFriendlyVoiceName()
+friendlyToInternalVoiceName() {
+  
+  # The internal voice name is generally just the friendly one with spaces removed.
+  # Only 2 voices, which are legacy voices, have spaces in their friendly names: 'Good News' and 'Pipe Organ'
+  # Presumably, no future voices will have embedded spaces.
+  local internalVoiceName=${1// /}
+
+  # There's one exception: friendly name 'Pipe Organ' maps to just 'Organ'.
+  case $internalVoiceName in
+    'PipeOrgan')
+      internalVoiceName='Organ'
+      ;;
+  esac
+
+  printf '%s\n' "$internalVoiceName"
+
+}
+
+# Caches the custom speaking rates from com.apple.speech.voice.prefs for *this shell session only*.
+# in global variable
+#    $customSpeakingRates
+# $customSpeakingRates is filled - once for this shell - as follows:
+#   Get all custom speaking rates (words per minute) from the preferences file - on a pristine system, not even the file may exist, let alone custom rates).
+#   Strip all chars. so that only (voice-creator, voice-ID, custom-rate) line triplets remain; e.g.:
+#     1886745202  # voice creator
+#     184844493   # voice ID
+#     200          # speaking rate; a value *roughly* >= 90 <= 360
+getCachedCustomSpeakingRates() {
+  [[ -z $customSpeakingRates && -n ${customSpeakingRates-unset} ]] && customSpeakingRates=$(defaults read com.apple.speech.voice.prefs VoiceRateDataArray 2>/dev/null | tr -d '() ,'  | sed '/^$/d' )
+}
+
+# Outputs the custom speaking rate for the specified voice, if it is defined - range is *roughly* between 90 and 360 - apparently, it's possible to at least get slightly lower.
+# If not defined, outputs nothing.
+getCustomSpeakingRate() {
+  local voice=$1 customRate
+  
+  # Set global variable $customSpeakingRates to contain any defined custom-speaking rates as 
+  # (voice-creator, voice-ID, custom-rate) line triplets.
+  getCachedCustomSpeakingRates
+
+  if [[ -n $customSpeakingRates ]]; then # short-circuit if there are no custom speaking rates at all
+
+    # Get (cached) internal identifiers for the target voice.
+    # NOTE: This is fairly time-consuming operation.
+    # This sets global variables InternalVoiceName, VoiceCreator, VoiceID
+    getVoiceInternals "$voice"
+
+    # Extract the custom speaking rate, if any, for the target voice.
+    customRate=$(awk -v first="$VoiceCreator" -v second="$VoiceID" '$1 == second  && prev == first { getline; print $1; exit } { prev = $1 }' <<<"$customSpeakingRates")
+
+    echo "$customRate"
+
+  fi
+}
+
+
+# SYNOPSIS
+#   speakText friendlyVoiceName [text]
+# If <text> is missing or empty, the demo text is spoken.
+speakText() {
+  local friendlyVoiceName=$1 text=$2 rateOpts
+
+  if [[ -z $text ]]; then # No text specified? Use demo text.
+    text=$(say -v \? | egrep -i "^$friendlyVoiceName +[a-z]{2}[_-]\w+ +#" | awk -F '#' '{ print $2; }')
+  fi
+
+  # !! Sadly, as of OSX 10.11, `say` doesn't respect custom speaking rates defined in System Preferences 
+  # !! when used with an explicit voice name (-v) (reported to Apple, 
+  # !! so we have to extract the custom rates ourselves and specify them explicitly with -r.
+  # !! Should `say` ever become custom-rate aware, this will no longer be needed.
+  rateOpts=()
+  customRate=$(getCustomSpeakingRate "$friendlyVoiceName")
+  (( customRate > 0 )) && rateOpts=( -r "$customRate" )
+
+  say -v "$friendlyVoiceName" "${rateOpts[@]}" -- "$text"
+}
+
+openTtsSystemPrefs() {
+  osascript <<'EOF'
+    tell application "System Preferences"
+      reveal anchor "TTS" of pane "com.apple.preference.speech"
+      activate
+    end tell
+EOF
+}
+
+getDefaultVoiceName() {
+  # Note: SelectedVoiceName actually contains the *friendly*, not the internal name.
+  defaults read com.apple.speech.voice.prefs SelectedVoiceName
+}
+
+# setDefaultVoice friendlyVoiceName
+setDefaultVoice() {
+
+  local friendlyVoiceName=$1
+
+  # Determine the specified voice's internal identifiers.
+  # Note that getVoiceInternals() sets shell-global variables $InternalVoiceName, $VoiceID, and $VoiceCreator.
+  getVoiceInternals "$friendlyVoiceName" || return
+
+    # Write the identifiers for the new default voice.
+  defaults write com.apple.speech.voice.prefs 'SelectedVoiceCreator' -int $VoiceCreator || die
+  defaults write com.apple.speech.voice.prefs 'SelectedVoiceID' -int $VoiceID || die
+  # Note: SelectedVoiceName actually contains the *friendly*, not the internal name. Case does NOT matter.
+  defaults write com.apple.speech.voice.prefs 'SelectedVoiceName' -string "$friendlyVoiceName" || die
+
+    # Sadly, there's no official way to notify the system of a change in default voice, as the only official way
+    # to change the default voice is to use System Preferences interactively.
+    # Simply updating defaults is NOT enough for the text-to-speech feature to pick up the change
+    # - only `say` does.
+    # Without further action, text-to-speech would only pick up the change on next reboot or after logging out and back in.
+    # An effective workaround is to kill the the per-user speech-synthesis server, which causes
+    # the system to instantly restart it - at which point the new settings are read and take effect.
+    # We keep our fingers crossed that the name and location of the speech-synthesis server, SpeechSynthesisServer.app,
+    # does not change in future OSX versions.
+    # The current name was obtained on OSX 10.10.3 as follows:
+    # Activity Monitor > search for 'speech'.
+    #  Note that it is the speech-synthesis server *daemon*, com.apple.speech.speechsynthesisd, that has the current default voice open
+    #  if you inspect the Open Files and Ports tab.
+    #  It is tempting, to simply run pkill com.apple.speech.speechsynthesisd and let the system restart the process, but that does NOT
+    #  fully work: while changing the voice per se is effective, *custom speaking rates for the voices are NOT honored& - 
+    #  whatever rate was last active lingers.
+    #  **Thus, it is the speech-synthesis *server* we must kill and manually restart.**
+    #  Tip of the hat to http://stackoverflow.com/a/27776019/45375
+  pkill -x SpeechSynthesisServer &>/dev/null
+  # The following path is the abstracted version - using the system-installed symlinks such as 'Current' that point to the active location - of:
+  #    /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesisServer.app
+  # The actual process command-line launched by the `open` command below looks like this:
+  #    /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesisServer.app/Contents/MacOS/SpeechSynthesisServer launchd
+  open /System/Library/Frameworks/ApplicationServices.framework/Frameworks/SpeechSynthesis.framework/Versions/Current/SpeechSynthesisServer.app || cat <<EOF >&2  
+WARNING:
+  Failed to restart the speech-synthesis server.
+  While the \`say\` utility will reflect the new default voice instantly,
+  the text-to-speech feature may not use the new voice until after a reboot.
+EOF
+
+}
+
+# ---- End: FUNCTIONS
+
+
+# ---- MAIN BODY
+
+# ----- BEGIN: OPTIONS PARSING: This is MOSTLY generic code, but:
+# Option-parameters loop.
+default=0
+listLangs=0
+list=0
+allInstalled=0
+bare=0
+internals=0
+validateVoiceNames=0
+speak=0
+manage=0
+quiet=0
+text=''
+allowOptsAfterOperands=1 operands=() i=0 optName= isLong=0 prefix= optArg= haveOptArgAttached=0 haveOptArgAsNextArg=0 acceptOptArg=0 needOptArg=0
+while (( $# )); do
+  if [[ $1 =~ ^(-)[a-zA-Z0-9]+.*$ || $1 =~ ^(--)[a-zA-Z0-9]+.*$ ]]; then # an option: either a short option / multiple short options in compressed form or a long option
+    prefix=${BASH_REMATCH[1]}; [[ $prefix == '--' ]] && isLong=1 || isLong=0
+    for (( i = 1; i < (isLong ? 2 : ${#1}); i++ )); do
+        acceptOptArg=0 needOptArg=0 haveOptArgAttached=0 haveOptArgAsNextArg=0 optArgAttached= optArgOpt= optArgReq=
+        if (( isLong )); then # long option: parse into name and, if present, argument
+          optName=${1:2}
+          [[ $optName =~ ^([^=]+)=(.*)$ ]] && { optName=${BASH_REMATCH[1]}; optArgAttached=${BASH_REMATCH[2]}; haveOptArgAttached=1; }
+        else # short option: *if* it takes an argument, the rest of the string, if any, is by definition the argument.
+          optName=${1:i:1}; optArgAttached=${1:i+1}; (( ${#optArgAttached} >= 1 )) && haveOptArgAttached=1
+        fi
+        (( haveOptArgAttached )) && optArgOpt=$optArgAttached optArgReq=$optArgAttached || { (( $# > 1 )) && { optArgReq=$2; haveOptArgAsNextArg=1; }; }
+        # ---- BEGIN: CUSTOMIZE HERE
+        case $optName in
+          d|default|set-default)
+            default=1
+            ;;
+          m|manage)
+            manage=1
+            ;;
+          L|list-langs)
+            listLangs=1
+            ;;
+          l|list)
+            list=1
+            ;;
+          a|all)
+            allInstalled=1
+            ;;
+          i|internals)
+            internals=1
+            ;;
+          b|bare)
+            bare=1
+            ;;
+          k|speak|speak=*)
+            acceptOptArg=1
+            speak=1
+            text=$optArgOpt
+            # If text is '-', read from stdin.
+            [[ $text == '-' ]] && text=$(</dev/stdin)
+            ;;
+          q|quiet)
+            quiet=1
+            ;;
+          *)
+            dieSyntax "Unknown option: ${prefix}${optName}."
+            ;;
+        esac
+        # ---- END: CUSTOMIZE HERE
+        (( needOptArg )) && { (( ! haveOptArgAttached && ! haveOptArgAsNextArg )) && dieSyntax "Option ${prefix}${optName} is missing its argument." || (( haveOptArgAsNextArg )) && shift; }
+        (( acceptOptArg || needOptArg )) && break
+    done
+  else # an operand
+    if [[ $1 == '--' ]]; then
+      shift; operands+=( "$@" ); break
+    elif (( allowOptsAfterOperands )); then
+      operands+=( "$1" ) # continue 
+    else
+      operands=( "$@" )
+      break
+    fi
+  fi
+  shift
+done
+(( "${#operands[@]}" > 0 )) && set -- "${operands[@]}"; unset allowOptsAfterOperands operands i optName isLong prefix optArgAttached haveOptArgAttached haveOptArgAsNextArg acceptOptArg needOptArg
+# ----- END: OPTIONS PARSING: "$@" now contains all operands (non-option arguments).
+
+# Check for incompatible options and validate number of operands.
+errMsg="Incompatible options specified."
+if (( manage )); then
+  (( $# == 0 )) || dieSyntax
+  (( (default + allInstalled + listLangs + list + speak + bare + internals) == 0 )) || dieSyntax "$errMsg"
+elif (( listLangs )); then
+  (( $# == 0 )) || dieSyntax
+  (( (default + list + speak + bare + internals + quiet) == 0 )) || dieSyntax "$errMsg"
+else 
+  (( allInstalled && ! (list || $# > 0) )) && dieSyntax "$errMsg"  # Note: we tolerate -a when explicit voice names are specified, even though it's implied.
+  (( bare && internals)) && dieSyntax "$errMsg"
+  if (( quiet && ! speak )); then # -q to quiet printed output always makes sense when speaking is requested
+    (( list )) && dieSyntax "$errMsg"  # with listing voices, -q makes no sense
+    (( default && $# == 1 )) || dieSyntax "$errMsg" # -q does make sense when setting a new default voice.
+  fi
+fi
+errMsg=
+
+# -- Handle the exceptional synopsis forms first.
+
+if (( manage )); then
+  openTtsSystemPrefs
+  exit 0
+elif (( listLangs )); then
+  # List the distinct, sorted set of language IDs only - by default among the active voices only, on request (-a) among all installed voices.
+  { (( allInstalled )) && listInstalledVoices || listActiveVoices; } | egrep -o ' [a-z]{2}[_-]\w+ +#' | awk '{ print $1 }' | sort -u
+  (( ${PIPESTATUS[0]} == 0 )) || die
+  exit 0
+fi
+
+# -- Getting here means that one of the following command forms was specified:
+#   [-d [newDefault]]
+#   -l 
+#   voiceName...
+
+
+# -- Validate operands and prepare for actual processing later.
+if (( list )); then
+  # Translate the language IDs, if any, to matching voice names.
+  # If no language ID was specified, getVoiceNamesByLangId returns ALL installed/active voices.
+  IFS=$'\n' read -d '' -ra voiceNames < <(getVoiceNamesByLangId $( (( allInstalled )) && printf %s '-a') "$@")
+  (( ${#voiceNames[@]} > 0 )) || die "No installed voices match the specified languages, $*."
+  set -- "${voiceNames[@]}" # set the resulting voices as operands to be processed below.
+elif (( default || $# == 0 )); then # get or set default voice
+  if (( $# == 1 )); then # set new default voice
+    setDefaultVoice "$1" || die
+    (( quiet )) || echo "Default voice changed to:"
+    # Leave the new default voice name as $1, because we will print information about it and/or speak text below.
+  elif (( $# == 0 )); then # get current default voice
+    # Set the current default voice name as $1, because we will print information about it and/or speak text below.
+    set -- "$(getDefaultVoiceName)"
+    if [[ -z $1 ]]; then
+      cat <<EOF >&2;
+ERROR: Failed to determine the default voice.
+       This typically happens on a pristine system where the default voice has
+       never been changed.
+       Once you've changed it for the first time, $kTHIS_NAME will be able to
+       determine it. You can change it with \`$kTHIS_NAME -d <voice>\`, or
+       interactively via System Preferences (\`$kTHIS_NAME -m\`).
+EOF
+      exit 1
+    fi
+  else # too many arguments
+    dieSyntax
+  fi
+else # explicit voice names were specified - they must be validated
+  validateVoiceNames=1
+fi
+
+# The list of target voices - whether directly specified or derived above -
+# if any, is now contained in $@, and what's left is to print information
+# about each and, if requested, speak text for each.
+
+
+okCount=0 allVoicesList= infoLine=
+for voice; do
+  
+  # Validate the voice, if needed and/or get the info line for the voice at hand.
+  infoLine=
+  if (( validateVoiceNames || (speak && ${#text} == 0) || ! (bare || internals) )); then
+    # Get and cache the list of all installed voices, as output by `say -v \?`.
+    [[ -z $allVoicesList ]] && { allVoicesList=$(listInstalledVoices) || die; }
+    # Note: This command both validates the voice name and returns the relevant `say -v \?` info line for potential later use.
+    infoLine=$(grep -Ei "^$voice +[a-z]{2}[_-]\w+ +#" <<<"$allVoicesList") || { echo "WARNING: '$voice' is not an installed voice." >&2; continue; }
+  fi
+
+  # Output:
+  if (( ! quiet )); then
+    if (( bare )); then # print friendly voice *name* only
+      printf '%s\n' "$voice"
+    elif (( internals )); then # print the voice's internal identifiers
+        printVoiceInternals "$voice"
+    else # print the voice-specific line as output by `say -v \?`.
+      printf '%s\n' "$infoLine"
+    fi
+  fi
+
+  # Speak: If requested, also speak text for the voice at hand.
+  if (( speak )); then
+    # Speak specified or demo text.
+    speakText "$voice" "$([[ -n $text ]] && printf %s "$text" || printf %s "${infoLine##*\#}" )"
+  fi
+
+  (( ++okCount ))
+
+done
+
+# Exit with 0, if at least one voice was successfully processed.
+(( okCount > 0 )) && exit 0 || exit 1
+
+####
+# MAN PAGE MARKDOWN SOURCE
+#  - Place a Markdown-formatted version of the man page for this script
+#    inside the here-document below.
+#    The document must be formatted to look good in all 3 viewing scenarios:
+#     - as a man page, after conversion to ROFF with marked-man
+#     - as plain text (raw Markdown source)
+#     - as HTML (rendered Markdown)
+#  Markdown formatting tips:
+#   - GENERAL
+#     To support plain-text rendering in the terminal, limit all lines to 80 chars.,
+#     and, for similar rendering as HTML, *end every line with 2 trailing spaces*.
+#   - HEADINGS
+#     - For better plain-text rendering, leave an empty line after a heading
+#       marked-man will remove it from the ROFF version.
+#     - The first heading must be a level-1 heading containing the utility
+#       name and very brief description; append the manual-section number 
+#       directly to the CLI name; e.g.:
+#         # foo(1) - does bar
+#     - The 2nd, level-2 heading must be '## SYNOPSIS' and the chapter's body
+#       must render reasonably as plain text, because it is printed to stdout
+#       when  `-h`, `--help` is specified:
+#         Use 4-space indentation without markup for both the syntax line and the
+#         block of brief option descriptions; represent option-arguments and operands
+#         in angle brackets; e.g., '<foo>'
+#     - All other headings should be level-2 headings in ALL-CAPS.
+#   - TEXT
+#      - Use NO indentation for regular chapter text; if you do, it will 
+#        be indented further than list items.
+#      - Use 4-space indentation, as usual, for code blocks.
+#      - Markup character-styling markup translates to ROFF rendering as follows:
+#         `...` and **...** render as bolded (red) text
+#         _..._ and *...* render as word-individually underlined text
+#   - LISTS
+#      - Indent list items by 2 spaces for better plain-text viewing, but note
+#        that the ROFF generated by marked-man still renders them unindented.
+#      - End every list item (bullet point) itself with 2 trailing spaces too so
+#        that it renders on its own line.
+#      - Avoid associating more than 1 paragraph with a list item, if possible,
+#        because it requires the following trick, which hampers plain-text readability:
+#        Use '&nbsp;<space><space>' in lieu of an empty line.
+####
+: <<'EOF_MAN_PAGE'
+# voices(1) - OS X text-to-speech voices
+
+## SYNOPSIS
+
+Get or set or speak with the DEFAULT VOICE:
+
+    voices [<options>] [-d [<newDefaultVoice>]]
+
+LIST INFORMATION about / speak with voices:
+
+    voices [<options>] <voice>...
+
+List / speak with ALL VOICES, optionally FILTERED BY LANGUAGES:
+
+    voices [<options>] -l [<lang>...]
+
+LIST LANGUAGES among voices:
+
+    voices -L [-a]
+
+MANAGE VOICES in System Preferences:
+
+    voices -m
+
+Shared options (synopsis forms 1-3):
+
+    -a          target all installed voices (default: only active ones)
+    -k          speak demo text with all targeted voices
+    -k"<text>"  speak specified text
+    -k-         speak text provided via stdin
+    -b          output format: print voice names only
+    -i          output format: print voice internals
+    -q          quiet mode: no printed output
+
+Standard options: `--help`, `--man`, `--version`, `--home`
+
+## DESCRIPTION
+
+`voices` sets the default voice for OS X's TTS (text-to-speech) synthesis or  
+returns information about the default, active and installed voices.  
+Additionally, it can speak either the demo text or specified text with  
+multiple voices.
+
+Case doesn't matter when specifying voice or language names.
+
+ * Specify voice names as they appear in System Preferences >  
+   Dictation & Speeech and in the output from `say -v \?`.
+ 
+ * Specify languages as two-character language IDs (e.g., `en`), optionally  
+   followed by `_` and a region identifier (e.g., `en_US`).
+
+Options `-l` and `-L` target all *active* voices by default, which are  
+typically a a subset of all *installed* voices, and constitute the set of  
+voices selected for active use in System Preferences > Dictation & Speech >  
+Text to Speech.  
+Adding `-a` targets all installed voices.
+
+The `-k` option for speaking with all targeted voices as well as other  
+shared options are discussed further below. Without `-k`, only printed output  
+is produced; conversely, `-q` silences printed output.
+
+* 1st synopsis form: `[-d [<newDefaultVoice>]]`, `[--default [<newDefaultVoice>]]`  
+  Returns information about the default voice or sets a new default voice.  
+  Note that any installed voice can be specified as the default voice, even  
+  if it is not among the set of active voices.
+
+* 2nd synopsis form: `<voice>...`  
+  Lists information about the specified voices (whether active or not).
+
+* 3rd synopsis form: `-l [<lang>...]`, `--list [<lang>...]`  
+  Lists information about active, installed, or voices matching one or more  
+  specified languages.  
+  Lists all active voices by default; `-a` lists all installed ones.  
+  If at least one `<lang>` operand is given, the list of active voices (by  
+  default) / installed voices (with `-a`) is filtered to output only those  
+  matching the specified language(s).
+  `<lang>` values may be mere language IDs (e.g., `en`) or language + region  
+  IDs (e.g., `en_US`); e.g., `en` matches all English voices irrespective of  
+  region, whereas `en_US` matches only US English voices.
+
+* 4th synopsis form: `-L`, `--list-langs`  
+  Lists the distinct set of languages supported among all active (by default)  
+  or all installed (`-a`) voices.  
+  Languages are listed as language + region identifiers, e.g., `en_US`.
+
+* 5th synopsis form:  `-m`, `--manage`  
+  Opens System Preferences > Dictation & Speech, where you can manage the  
+  set of active voices, install additional voices, and control other aspects  
+  of text-to-speech synthesis.
+
+## SHARED OPTIONS
+
+These options complement the main options, which determine the synopsis form,  
+discussed above.
+
+### General Options
+
+  * `-q`    
+    Quiet mode: suppresses printed output, such as when only speech output  
+    (`-k`) is desired or when the new default voice should be set quietly.  
+    Cannot be combined with `-L`, whose sole purpose is to print  
+    information.
+
+### Speaking options (synopsis forms 1-3):
+
+Note that if the command targets multiple voices, speaking happens
+after each voice's information has been printed (unless printing is  
+suppressed with `-q`).
+
+  * `-k`, `--speak` (no argument)  
+      Speaks each targeted voice's demo text.
+
+  * `-k"<text>"`, `--speak="<text>"`  
+      Speaks the specified text using each targeted voice.  
+      Note that `"<text>"` must be directly attached to the option and should  
+      generally be quoted to protect it from (unwanted) interpretation by the  
+      shell.
+    
+  * `-k-`, `--speak=-`  
+      Speaks text provided via stdin using each targeted voice.
+
+### Printed-Output Options (synopsis forms 1-3)
+
+By default, voice information printed is in the form provided by the standard  
+`say` utility when invoked as `say -v \?`, which is:  
+`<voice> <lang> # <demo text>`
+
+The following, mutually exclusive options modify this behavior:
+
+  * `-b`, `--bare`  
+    Outputs mere voice names only.
+
+  * `-i`, `--internals`  
+    Outputs internal voice identifiers, as used by the system.
+
+## STANDARD OPTIONS
+
+All standard options must be provided as the only argument; all of them provide  
+information only.
+
+ * `-h, --help`  
+   Prints the contents of the synopsis chapter to stdout for quick reference.
+
+ * `--man`  
+   Displays this manual page, which is a helpful alternative to using `man`,  
+   if the manual page isn't installed.
+
+ * `--version`  
+   Prints version information.
+  
+ * `--home`  
+   Opens this utility's home page in the system's default web browser.
+
+## LICENSE
+
+For license information, bug reports, and more, visit this utility's home page  
+by running `voices --home`
+
+## EXAMPLES
+
+      # List all active voices; add -a to list all installed ones.
+    voices -l         
+
+      # Print information about the default voice and speak its demo text.
+    voices -d -k
+
+      # Print information about voice 'Alex'.
+    voices alex
+
+      # Make 'Alex' the new default voice, print information about it, and 
+      # speak text that announces the change. 
+    voices -k'The new default voice is Alex.' -d alex 
+
+      # List languages for which at least one voice is active.
+    voices -L
+
+      # List active French voices.
+    voices -l fr
+
+      # Speak the respective demo text with all active voices.
+    voices -l -k
+
+      # Speak "hello" first with Alex, then with Jill, suppressing printed
+      # output.
+    voices -k"hello" -q alex jill
+
+      # Print information about all active Spanish voices and speak their
+      # respective demo text.
+    voices -k -l es
+
+EOF_MAN_PAGE

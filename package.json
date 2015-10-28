@@ -1,0 +1,49 @@
+{
+    "name": "awf-SpeakActiveAppText"
+  , "description": "An Alfred 2 workflow that speaks the active application's text with specific voices."
+  , "private": true
+  , "version": "0.0.0"
+  , "os":
+    [
+        "darwin"
+    ]
+  , "preferGlobal": false
+  
+  
+  , "homepage": "https://github.com/mklement0/awf-SpeakActiveAppText"
+  , "repository":
+    {
+        "type": "git"
+      , "url": "https://github.com/mklement0/awf-SpeakActiveAppText.git"
+    }
+  , "bugs":
+    {
+        "url": "https://github.com/mklement0/awf-SpeakActiveAppText/issues"
+    }
+  , "scripts":
+    {
+        "test": "make test"
+    }
+  , "keywords":
+    [
+        "alfred"
+      , "workflow"
+      , "speech"
+      , "speak"
+      , "tts"
+      , "text-to-speech"
+      , "selection"
+      , "voices"
+    ]
+  , "author": "Michael Klement <mklement0@gmail.com> (http://same2u.net)"
+  , "license": "MIT"
+  , "net_same2u": { "make_pkg": { "tocOn": true, "tocTitle": "**Contents**" } }
+  , "devDependencies":
+    {
+      "doctoc": "^0.13.0",
+      "json": "^9.0.3",
+      "replace": "^0.3.0",
+      "semver": "^4.2.0",
+      "tap": "^0.6.0"
+    }
+}
