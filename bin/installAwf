@@ -219,8 +219,6 @@ esac
 # No other arguments supported.
 (( $# )) && dieSyntax
 
-echo "[$npm_config_argv]"
-
 # !! If we're being called in the context of *reinstallation* IGNORE the 
 # !! the uninstall command.
 if (( uninstall )); then
