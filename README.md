@@ -1,6 +1,3 @@
-<!-- Remove, once published/released. -->
-![project status - not ready for release](https://img.shields.io/badge/status-not_ready_for_release-red.svg)
-
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mklement0/speak.awf/blob/master/LICENSE.md)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -22,8 +19,6 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # speak.awf &mdash; introduction
-
-[DO NOT USE YET]
 
 This project is an **[Alfred 2](http://alfredapp.com) workflow** for **OS X 10.10+** that **speaks the active application's text with a _specific_ voice** (not just the default voice).  
 Note: Use of workflows in Alfred 2 requires the paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on - it's worth it.
