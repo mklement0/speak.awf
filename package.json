@@ -1,12 +1,12 @@
 {
   "name": "speak.awf",
   "description": "An Alfred 2 workflow that speaks the active application's text with specific voices.",
-  "private": true,
-  "version": "0.1.2",
+  "private": false,
+  "version": "0.1.3",
   "os": [
     "darwin"
   ],
-  "preferGlobal": false,
+  "preferGlobal": true,
   "homepage": "https://github.com/mklement0/speak.awf",
   "repository": {
     "type": "git",
@@ -16,11 +16,14 @@
     "url": "https://github.com/mklement0/speak.awf/issues"
   },
   "scripts": {
+    "postinstall": "./bin/installAwf",
+    "postuninstall": "./bin/installAwf -u",
     "test": "make test"
   },
   "keywords": [
     "alfred",
     "workflow",
+    "awf",
     "speech",
     "speak",
     "tts",

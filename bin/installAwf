@@ -1,0 +1,324 @@
+#!/usr/bin/env bash
+
+kTHIS_NAME=${BASH_SOURCE##*/}
+
+CDPATH=  # To ensure predictable `cd` behavior.
+
+# ------- BEGIN: helper functions
+
+die() { echo "$kTHIS_NAME: ERROR: ${1:-"ABORTING due to unexpected error."}" 1>&2; exit ${2:-1}; }
+dieSyntax() { echo "$kTHIS_NAME: ARGUMENT ERROR: ${1:-"Invalid argument(s) specified."} Use -h for help." 1>&2; exit 2; }
+
+# SYNOPSIS
+#   rreadlink <fileOrDirPath>
+# DESCRIPTION
+#   Prints the canonical path of the specified symlink's ultimate target.
+#   If the argument is not a symlink, its own canonical path is output; note
+#   that this means that if a non-symlink argument has symlinks in its
+#   *directory* path, they are resolved to their ultimate target.
+#   A broken symlink causes an error that reports the non-existent target.
+# NOTES
+#   Attempts to use `readlink`, which is found on most modern platforms
+#   (notable exception: HP-UX). If `readlink` is not available, output from
+#   `ls -l` is parsed, which is the only POSIX-compliant way to determine a 
+#    symlink's target.
+#    Caveat: This will break if a filename contains literal ' -> ' or has 
+#            embedded newlines.
+# THANKS
+#   Gratefully adapted from http://stackoverflow.com/a/1116890/45375
+rreadlink() ( # execute function in a *subshell* to localize the effect of `cd`, ...
+
+  local target=$1 fname targetDir readlinkexe=$(command -v readlink) CDPATH= 
+
+  # Since we'll be using `command` below for a predictable execution
+  # environment, we make sure that it has its original meaning.
+  { \unalias command; \unset -f command; } &>/dev/null
+
+  while :; do # Resolve potential symlinks until the ultimate target is found.
+      [[ -L $target || -e $target ]] || { command printf '%s\n' "$FUNCNAME: ERROR: '$target' does not exist." >&2; return 1; }
+      command cd "$(command dirname -- "$target")" # Change to target dir; necessary for correct resolution of target path.
+      fname=$(command basename -- "$target") # Extract filename.
+      [[ $fname == '/' ]] && fname='' # !! curiously, `basename /` returns '/'
+      if [[ -L $fname ]]; then
+        # Extract [next] target path, which is defined
+        # relative to the symlink's own directory.
+        if [[ -n $readlinkexe ]]; then # Use `readlink`.
+          target=$("$readlinkexe" -- "$fname")
+        else # `readlink` utility not available.
+          # Parse `ls -l` output, which, unfortunately, is the only POSIX-compliant 
+          # way to determine a symlink's target. Hypothetically, this can break with
+          # filenames containig literal ' -> ' and embedded newlines.
+          target=$(command ls -l -- "$fname")
+          target=${target#* -> }
+        fi
+        continue # Resolve [next] symlink target.
+      fi
+      break # Ultimate target reached.
+  done
+  targetDir=$(command pwd -P) # Get canonical dir. path
+  # Output the ultimate target's canonical path.
+  # Note that we manually resolve paths ending in /. and /.. to make sure we
+  # have a normalized path.
+  if [[ $fname == '.' ]]; then
+    command printf '%s\n' "${targetDir%/}"
+  elif  [[ $fname == '..' ]]; then
+    # Caveat: something like /var/.. will resolve to /private (assuming
+    # /var@ -> /private/var), i.e. the '..' is applied AFTER canonicalization.
+    command printf '%s\n' "$(command dirname -- "${targetDir}")"
+  else
+    command printf '%s\n' "${targetDir%/}/$fname"
+  fi
+)
+
+# Displays a GUI prompt with OK/Cancel buttons and a caution (exclamation point) icon.
+# Returns exit code 0 if OK is pressed, 1 otherwise.
+prompt() {
+  local msgQuoted=${1//\"/\\\"}
+
+  osascript <<EOF &>/dev/null
+# On OSX <= 10.8, osascript cannot directly display interactive GUI elements.
+# Determine minor OS X version so whe know whether we need a workaround.
+set AppleScript's text item delimiters to {"."}
+set minorOsVer to text item 2 of system version of (system info)
+set useWorkaround to minorOsVer as number <= 8
+set canceled to false
+
+try
+  if useWorkaround then
+    # Use context "SystemUIServer" instead, and restore focus to the active application
+    # afterward; note: this is not completely seamless, as the active application's
+    # non-active windows may become visible in the process.
+    tell application "SystemUIServer" to display dialog "$msgQuoted" with icon caution
+  else
+    display dialog "$msgQuoted" with icon caution
+  end if
+on error
+  # user canceled
+  set canceled to true
+end try
+
+# If workaround was used: restore focus to active app.
+if useWorkaround then activate application (path to frontmost application as text)
+
+# Return result:
+# Throw a dummy error if the user canceled so as to signal via the resulting
+# nonzero *exit code* - always *1* - that the dialog was canceled.
+if canceled then error "Canceled" number -128
+# Getting here means success and thus exit code 0.
+EOF
+  return $?  # pass osascript's exit code through
+}
+
+#   dirHasJxaScripts <folder>
+# Indicates via exit code if there are any scripts (directly) in the target
+# folder with a JXA shebang line ('...osascript -l JavaScript').
+# <folder> defaults to the current dir.
+dirHasJxaScripts() {
+  # Note: The 2>/dev/null silences errors from trying to read *subdirs*.
+  [[ -n "$(head -n 1 "${1:-.}"/* 2>/dev/null | LC_ALL=C sed -n '/^#!.*osascript.*-l.*JavaScript/p')" ]]
+}
+
+# Compares 2 version strings (thanks, http://stackoverflow.com/a/4025065/45375)
+#   - supports *numerical* components only
+#   - leading zeros in components are ignored
+# Result is indicated via *return value*:
+#  0 == identical
+#  1 == v1 > v2, "1st version is higher"
+#  2 == v1 < v2, "2nd version is higher"
+# Example:
+#   vercomp 2.1 2.2  # -> returns exit code 2, because 2.1 < 2.2
+vercomp () {
+    [[ $1 == $2 ]] && return 0
+    local i v1=$1 v2=$2
+    # As a courtesy, remove an initial 'v', if present
+    [[ ${v1:0:1} == 'v' ]] && v1=${v1:1}
+    [[ ${v2:0:1} == 'v' ]] && v2=${v2:1}    
+    local IFS='.'
+    local i vna1=( $v1 ) vna2=( $v2 )
+    # fill empty fields in vna1 with zeros
+    for ((i=${#vna1[@]}; i<${#vna2[@]}; i++)); do
+        vna1[i]=0
+    done
+    for ((i=0; i<${#vna1[@]}; i++)); do
+        # Fill empty fields in vna2 with zeros
+        [[ -z ${vna2[i]} ]] && vna2[i]=0
+        (( 10#${vna1[i]} > 10#${vna2[i]} )) && return 1
+        (( 10#${vna1[i]} < 10#${vna2[i]} )) && return 2
+    done
+    return 0
+}
+
+getInstalledWfsRootFolder() {
+  local plist parentFolder folder
+  plist="$HOME/Library/Preferences/com.runningwithcrayons.Alfred-Preferences.plist"
+  [[ -f $plist ]] || die "Cannot locate Alfred's preferences plist file: $plist"
+  # Look for a sync folder first...
+  parentFolder=$(/usr/libexec/PlistBuddy -c 'print :syncfolder' "$plist" 2> /dev/null)
+  if [[ -n $parentFolder ]]; then
+    [[ ${parentFolder:0:1} == '~' ]] && parentFolder="$HOME${parentFolder:1}"
+  else # look in default location
+    parentFolder="$HOME/Library/Application Support/Alfred 2"
+  fi
+  folder="$parentFolder/Alfred.alfredpreferences"
+  [[ -d $folder ]] || die "Cannot locate Alfred's user preferences folder: $folder"
+  printf '%s\n' "$folder/workflows"
+}
+
+
+# Returns the full path of the Alfred 2 workflow folder hosting the workflow with the specified bundle ID.
+# If there is no such workflow, the exit code is set to 1 and nothing is output.
+getInstalledWfFolderByBundleId() {
+  local bundleId=$1 wfRootFolder
+  wfRootFolder=$(getInstalledWfsRootFolder)
+  for f in "$wfRootFolder/"*"/info.plist"; do
+    { /usr/libexec/PlistBuddy -c 'print "bundleid"' "$f" 2>/dev/null | fgrep -qix "$bundleId"; } && { echo "$(dirname "$f")"; return 0; }
+  done
+  return 1
+}
+
+
+#   getMinOsVer <plistFile>
+# Parses the 'readme' field in the specified info.plist file for a minimum OS X
+# version requirement and returns the version number found.
+# The case-insensitive phrase "requires OS X 10.x[.x]" is recognized anywhere
+# in the text, irrespective of whitespace.
+getMinOsVer() {
+
+  local plistFile=$1 readmeText
+
+  readmeText=$(/usr/libexec/PlistBuddy -c 'print :readme' "$plistFile")
+
+  tr -d '[:space:]' <<<"$readmeText" | grep -Eio "requiresosx(10\.[.[:digit:]]+)" | tr -C -d '.[:digit:]'
+
+}
+
+# ------- END: helper functions
+
+uninstall=0
+case $1 in
+   -h|--help)
+    # Print usage information and exit.
+    cat <<EOF
+$kTHIS_NAME [-u]
+
+No arguments:
+  Opens this package's *.alfredworkflow archive so as to prompt Alfred 2
+  to import it, thereby installing the workflow.
+
+-u
+  Uninstalls this package's workflow from Alfred 2, using the bundle ID
+  to identify it.
+EOF
+    ;;
+   -u|--uninstall)
+    uninstall=1
+    shift
+    ;;
+esac
+
+# No other arguments supported.
+(( $# )) && dieSyntax
+
+echo "[$npm_config_argv]"
+
+# !! If we're being called in the context of *reinstallation* IGNORE the 
+# !! the uninstall command.
+if (( uninstall )); then
+  # npm_config_argv contains a JSON object with the arguments passed to `npm`
+  # on invocation: if it contains the the `install` command [or any prefix string], we
+  # know we're being called in the context of REinstallation, in which case we 
+  # do NOT want to uninstall, lest we lose customizations.
+  [[ ${npm_config_argv// } =~ '":["i' ]] && { echo "(No workflow uninstallation during reinstallation.)" >&2; exit 0; }
+fi
+
+# -- BEGIN: Determine names and filesystem locations and check package integrity.
+# Determine this package's true directory (symlinks resolved).
+# Note that the package dir is the *parent* of this script's dir.
+packageDir="$(rreadlink "$(dirname -- "$BASH_SOURCE")")/.."
+wfSourceDir="$packageDir/alfredworkflow"
+wfArchiveFile=$(printf %s "$packageDir"/archive/*.alfredworkflow)
+
+# Derive the package name from it (simply use the folder name)
+packageName=$(cd -- "$packageDir"; printf %s "$(basename "$PWD")")
+
+# The path to the workflow's info.plist file.
+plistFile="$wfSourceDir/info.plist"
+
+# Get the bundle ID.
+# Note that while we don't strictly need it for *installation*, we do require
+# it just the same, as installing without a bundle ID would mean inability to
+# uninstall later.
+bundleid=$(/usr/libexec/PlistBuddy -c 'print :bundleid' "$plistFile")
+[[ -n $bundleid && $bundleid != '* *' ]] || die "Failed to determine $packageName's bundle ID."
+
+# -- END: Determine names and filesystem locations.
+
+# set | egrep '^npm_'
+
+# Sanity check: is Alfred 2 installed?
+alfredVer=$(osascript -e 'version of application "Alfred 2"')
+[[ -n $alfredVer ]] || die "'Alfred 2' must be installed to install this workflow - see http://alfredapp.com"
+
+if (( uninstall )); then
+
+  # Locate the installed folder 
+  wfInstalledFolder=$(getInstalledWfFolderByBundleId "$bundleid")
+  [[ -d $wfInstalledFolder ]] || { echo "(Nothing to uninstall: looks like workflow $packageName ($bundleid) is not installed (anymore).)" >&2; exit 0; }
+
+  # We do NOT prompt on uninstallation so as to facilitate automated uninstalls,
+  # as is the general expectation with npm commands.
+
+  rm -rf "$wfInstalledFolder"
+
+  [[ -d $wfInstalledFolder ]] && die "Uninstallation of workflow $packageName ($bundleid) failed: could not remove folder '$wfInstalledFolder'"
+
+  echo "Workflow $packageName ($bundleid) successfully uninstalled."
+
+else # install
+  
+  # First, make sure the archive file exists.
+  [[ -f $wfArchiveFile ]] || die "Package corrupted: workflow archive file 'archive/*.alfredworkflow' not found."
+  
+  # Check if the workflow has an explicitly stated minimum OS X version requirement.
+  # !! Since there's no dedicated field in the 'info.plist' we scan the 'readme'
+  # !! field, which is expected to contains a phrase like 'requires OS X 10.x[.x]'
+  # !! - case and whitespace are ignored.
+  minOsVer=$(getMinOsVer "$plistFile")
+
+  # As a courtesy, if no explicit min. version is stated, look for JXA
+  # scripts in the workflow and set the min. version to OS X 10.10, if any
+  # are found.
+  if [[ -z $minOsVer ]] && dirHasJxaScripts "$wfSourceDir"; then
+    minOsVer=10.10 # JXA requires 10.10+
+  fi
+
+  if [[ -n $minOsVer ]]; then
+    osVer=$(osascript -e 'system version of (system info)') || die "Failed to determine the OS version."
+    vercomp "$osVer" "$minOsVer"
+    (( $? <= 1 )) || die "This workflow requires OS X $minOsVer or higher; this is OS X $osVer"
+  fi
+
+  cat <<EOF
+Installing workflow $packageName by opening '$wfArchiveFile'...
+
+ * Alfred 2 will open and show a confirmation prompt.
+ * CAVEAT: If you uninstall this package later with \`npm rm -g $packageName\`, 
+           there will be NO confirmation prompt before removing the workflow
+           from Alfred 2.
+
+EOF
+  # NOTE: Alfred will invariably PROMPT to import (including a visually prominent warning when
+  #       *replacing* an existing workflow).
+  #       This makes sense: you want to customize a workflow right after installing it
+  #       and, in the case of replacement, know that you're replacing (and possibly
+  #       tweak afterward).
+  #       This, fortunately, doesn't block the npm commmand itself,
+  #       but trying to install MULTIPLE workflows with a single `npm install`
+  #       will fail, because the FIRST workflow's prompt in Alfred Preferences
+  #       will *block* subsequent imports.
+  open -- "$wfArchiveFile" || die "Installation of '$wfArchiveFile' failed."
+
+fi
+
+
+exit 0
