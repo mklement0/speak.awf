@@ -73,9 +73,9 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>Michael Klement</string>
+	<string>Michael Klement &lt;mklement0@gmail.com&gt;</string>
 	<key>description</key>
-	<string>Speaks the active application's text with specific voices.</string>
+	<string>Speak the active application's text with specific voices.</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
@@ -450,6 +450,6 @@ EOF
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>https://github.com/mklement0/awf-SpeakActiveAppText</string>
+	<string>https://github.com/mklement0/speak.awf</string>
 </dict>
 </plist>

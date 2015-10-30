@@ -2,7 +2,7 @@
   "name": "speak.awf",
   "description": "An Alfred 2 workflow that speaks the active application's text with specific voices.",
   "private": true,
-  "version": "0.1.0-0",
+  "version": "0.1.0",
   "os": [
     "darwin"
   ],

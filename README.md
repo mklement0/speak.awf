@@ -78,7 +78,7 @@ For the most part, this works fine, but occasionally, especially under heavy sys
 
 ## Installation Steps
 
-* **Click [here](https://raw.githubusercontent.com/mklement0/speak.awf/stable/archive/speak.awf.alfredworkflow)** to start the download.
+* **Click [here](blob/stable/archive/speak.awf.alfredworkflow?raw=true)** to start the download.
 * Open the downloaded file: Alfred 2 will prompt you to import the workflow - confirm.
 * After importing, proceed with customization below.
   * _Caveat_: If you _reinstall_, existing customizations will be lost, unfortunately, and have to be reapplied.
@@ -148,6 +148,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.0](https://github.com/mklement0/speak.awf/compare/v0.1.0-0...v0.1.0)** (2015-10-30):
+  * Release candidate - testing download link.
 
 * **[v0.1.0-0](https://github.com/mklement0/speak.awf/compare/v0.0.1...v0.1.0-0)** (2015-10-30):
   * Preparing for initial release.
