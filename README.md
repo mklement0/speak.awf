@@ -20,12 +20,12 @@
 
 # speak.awf &mdash; introduction
 
-This project is an **[Alfred 2](http://alfredapp.com) workflow** for **OS X 10.10+** that **speaks the active application's text with a _specific_ voice** (not just the default voice).  
-Note: Use of workflows in Alfred 2 requires the paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on - it's worth it.
+This project is an **[Alfred 2](http://alfredapp.com) workflow** for **OS X 10.10+** that **speaks the active application's text with a _specific_ voice** (not just the default voice) **using TTS** (text-to-speech synthesis).  
+Note: Use of workflows in Alfred 2 requires the paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on - an investment well worth making.
 
 The workflow comes with:
 
-* The `speak [<voice>]` keyword that speaks the active application's text either with the default voice or the specified voice.
+* The **`speak [<voice>]`** keyword that speaks the active application's text either with the default voice or the specified voice.
   * To make a given voice the new default voice without speaking anything, use `Option+Return`.
 * Templates for defining **multiple global keyboard shortcuts for speaking with a predefined voice each**.
 
@@ -143,6 +143,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.1](https://github.com/mklement0/speak.awf/compare/v0.1.0...v0.1.1)** (2015-10-30):
+  * [doc] `README.md` improvements.
 
 * **v0.1.0** (2015-10-30):
   * Initial release.
