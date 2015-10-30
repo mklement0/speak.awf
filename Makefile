@@ -50,7 +50,8 @@ test:
 ifeq ($(NOTEST),1)
 	@echo Note: Skipping tests, as requested. >&2
 else
-	@if [[ -n $$(json -f package.json main) ]]; then tap ./test; else urchin ./test; fi
+	@exists() { [ -e "$$1" ]; }; exists ./test/* || { echo "(No tests defined.)" >&2; exit 0; }; \
+	 if [[ -n $$(json -f package.json main) ]]; then tap ./test; else urchin ./test; fi
 endif
 
 # Commits (with prompt for message) and pushes to the branch of the same name in remote repo 'origin', tags included.
