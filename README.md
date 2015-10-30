@@ -1,7 +1,7 @@
 <!-- Remove, once published/released. -->
 ![project status - not ready for release](https://img.shields.io/badge/status-not_ready_for_release-red.svg)
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mklement0/awf-speak-selection/blob/master/LICENSE.md)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mklement0/speak.awf/blob/master/LICENSE.md)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -78,7 +78,7 @@ For the most part, this works fine, but occasionally, especially under heavy sys
 
 ## Installation Steps
 
-* **Click [here](blob/stable/archive/speak.awf.alfredworkflow?raw=true)** to start the download.
+* **Click [here](https://github.com/mklement0/speak.awf/blob/stable/archive/speak.awf.alfredworkflow?raw=true)** to start the download.
 * Open the downloaded file: Alfred 2 will prompt you to import the workflow - confirm.
 * After importing, proceed with customization below.
   * _Caveat_: If you _reinstall_, existing customizations will be lost, unfortunately, and have to be reapplied.
@@ -149,11 +149,5 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
-* **[v0.1.0](https://github.com/mklement0/speak.awf/compare/v0.1.0-0...v0.1.0)** (2015-10-30):
-  * Release candidate - testing download link.
-
-* **[v0.1.0-0](https://github.com/mklement0/speak.awf/compare/v0.0.1...v0.1.0-0)** (2015-10-30):
-  * Preparing for initial release.
-
-* **v0.0.1** (2015-10-28):
-  * initial release
+* **v0.1.0** (2015-10-30):
+  * Initial release.
