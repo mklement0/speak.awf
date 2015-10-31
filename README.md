@@ -1,4 +1,4 @@
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mklement0/speak.awf/blob/master/LICENSE.md)
+[![npm version](https://img.shields.io/npm/v/speak.awf.svg)](https://npmjs.com/package/speak.awf) [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/mklement0/speak.awf/blob/master/LICENSE.md)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -8,7 +8,8 @@
 - [speak.awf &mdash; introduction](#speakawf-&mdash-introduction)
 - [Installation](#installation)
   - [Prerequisites](#prerequisites)
-  - [Installation Steps](#installation-steps)
+  - [Installation from the npm registry](#installation-from-the-npm-registry)
+  - [Manual installation](#manual-installation)
 - [Customization](#customization)
   - [Configuration with a custom system keyboard shortcut](#configuration-with-a-custom-system-keyboard-shortcut)
 - [License](#license)
@@ -71,12 +72,28 @@ For the most part, this works fine, but occasionally, especially under heavy sys
     * No further steps are needed if you leave the _default_ global keyboard shortcut, `⌥⎋` (Option+Esc), in place (recommended).
        * If you do use a _custom_ shortcut, you must modify the workflow as described under [Customization](#customization) below.
 
-## Installation Steps
+## Installation from the npm registry
+
+ <sup>Note: Even if you don't use Node.js itself: its package manager, `npm`, works across platforms and is easy to install; try  
+ [`curl -L http://git.io/n-install | bash`](https://github.com/mklement0/n-install)</sup>
+
+With [Node.js](http://nodejs.org/) installed, install [the package](https://www.npmjs.com/package/speak.awf) as follows:
+
+    [sudo] npm install speak.awf -g
+
+**Note**:
+
+* Whether you need `sudo` depends on how you installed Node.js / io.js and whether you've [changed permissions later](https://docs.npmjs.com/getting-started/fixing-npm-permissions); if you get an `EACCES` error, try again with `sudo`.
+* Alfred 2 will prompt you to import the workflow - confirm.
+  * _Caveat_: If you _reinstall_, existing customizations will be lost, unfortunately, and have to be reapplied.
+* After importing, proceed with [customization](#customization) below.
+
+## Manual installation
 
 * **Click [here](https://github.com/mklement0/speak.awf/blob/stable/archive/speak.awf.alfredworkflow?raw=true)** to start the download.
 * Open the downloaded file: Alfred 2 will prompt you to import the workflow - confirm.
-* After importing, proceed with customization below.
   * _Caveat_: If you _reinstall_, existing customizations will be lost, unfortunately, and have to be reapplied.
+* After importing, proceed with [customization](#customization) below.
 
 # Customization
 
@@ -143,6 +160,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.5](https://github.com/mklement0/speak.awf/compare/v0.1.4...v0.1.5)** (2015-10-30):
+  * [doc] `README.md` update: `npm` badge and install instructions added.
 
 * **[v0.1.4](https://github.com/mklement0/speak.awf/compare/v0.1.3...v0.1.4)** (2015-10-30):
   * [fix] Removed accidentally-left-behind debug output.

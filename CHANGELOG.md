@@ -4,6 +4,9 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.1.5](https://github.com/mklement0/speak.awf/compare/v0.1.4...v0.1.5)** (2015-10-30):
+  * [doc] `README.md` update: `npm` badge and install instructions added.
+
 * **[v0.1.4](https://github.com/mklement0/speak.awf/compare/v0.1.3...v0.1.4)** (2015-10-30):
   * [fix] Removed accidentally-left-behind debug output.
 
