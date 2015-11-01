@@ -67,7 +67,8 @@ For the most part, this works fine, but occasionally, especially under heavy sys
 
  * OS X 10.10 or higher
  * [Alfred 2](http://alfredapp.com) with its paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on.
- * Open `System Preferences` and ensure the following:
+ * The global TTS keyboard shortcut must be activated:
+    * Open `System Preferences`.
     * In pane `Dication & Speech`, anchor `Text to Speech`, ensure that `Speak selected text when the key is pressed` is _checked_.
     * No further steps are needed if you leave the _default_ global keyboard shortcut, `⌥⎋` (Option+Esc), in place (recommended).
        * If you do use a _custom_ shortcut, you must modify the workflow as described under [Customization](#customization) below.
@@ -83,7 +84,7 @@ With [Node.js](http://nodejs.org/) installed, install [the package](https://www.
 
 **Note**:
 
-* Whether you need `sudo` depends on how you installed Node.js / io.js and whether you've [changed permissions later](https://docs.npmjs.com/getting-started/fixing-npm-permissions); if you get an `EACCES` error, try again with `sudo`.
+* Whether you need `sudo` depends on how you installed Node.js and whether you've [changed permissions later](https://docs.npmjs.com/getting-started/fixing-npm-permissions); if you get an `EACCES` error, try again with `sudo`.
 * Alfred 2 will prompt you to import the workflow - confirm.
   * _Caveat_: If you _reinstall_, existing customizations will be lost, unfortunately, and have to be reapplied.
 * After importing, proceed with [customization](#customization) below.
@@ -99,7 +100,7 @@ With [Node.js](http://nodejs.org/) installed, install [the package](https://www.
 
 Customization has two to three parts:
 
-* Decide what predefined voices you want to text to be spoken with _by global hotkey_ (keyboard shortcut).
+* Decide what predefined voices you want text to be spoken with _by global hotkey_ (keyboard shortcut).
 * Assign a hotkey to each such voice.
 * _If_ you've chosen a _custom_ hotkey for the `Speak selected text when the key is pressed` system feature (not recommended): see the next chapter.
 
@@ -160,6 +161,13 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.1.6](https://github.com/mklement0/speak.awf/compare/v0.1.5...v0.1.6)** (2015-11-01):
+  * [enhancement] Option+Enter makes a specific voice the new default voice; on the
+     speak-with-default-voice and no-matching-voice-found result items it instead displays
+     System Preferences for managing the installed/active voices.
+  * [enhancement] Speak-with-default-voice result item now names the current default voice.
+  * [doc] `README.md` corrections.
 
 * **[v0.1.5](https://github.com/mklement0/speak.awf/compare/v0.1.4...v0.1.5)** (2015-10-30):
   * [doc] `README.md` update: `npm` badge and install instructions added.

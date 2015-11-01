@@ -49,7 +49,7 @@
 				<key>modifiers</key>
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
-				<string>Make this voice the default voice.</string>
+				<string>On a specific voice: make it the new default; otherwise: manage voices in System Preferences.</string>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -115,12 +115,14 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>voice='{query}'
+				<string># Sets a new default voice.
 
-if [[ -n $voice ]]; then
-	./voices -qd "$voice"  2&gt;&amp;1 &amp;&amp; echo "{query} is now the default voice."
+voice='{query}'
+
+if [[ $voice == '(manage)' ]]; then
+  ./manageVoices
 else
-	echo "ERROR: Please select a voice first."
+  ./voices -qd "$voice"  2&gt;&amp;1 &amp;&amp; echo "{query} is now the default voice."
 fi
 </string>
 				<key>type</key>
@@ -141,7 +143,17 @@ fi
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>./toggleSpeaking '{query}'
+				<string>qry="{query}"
+
+if [[ $qry == '(manage)' ]]; then
+
+  ./manageVoices
+
+else
+
+  ./toggleSpeaking "$qry"
+
+fi
 </string>
 				<key>type</key>
 				<integer>0</integer>
@@ -184,8 +196,8 @@ IFS=$'\n' read -d '' -ra voiceNames &lt; "$kTempFile"
 
 kDefaultVoiceItem="
 &lt;item&gt;
-  &lt;title&gt;default voice&lt;/title&gt;
-  &lt;subtitle&gt;Speak the active app's text with the default voice&lt;/subtitle&gt;
+  &lt;title&gt;Default voice ($(defaults read com.apple.speech.voice.prefs SelectedVoiceName))&lt;/title&gt;
+  &lt;subtitle&gt;Speak the active app's text with the default voice.&lt;/subtitle&gt;
   &lt;arg&gt;&lt;![CDATA[]]&gt;&lt;/arg&gt;
 &lt;/item&gt;
 "
@@ -202,7 +214,7 @@ for voiceName in "${voiceNames[@]}"; do
     items+="
 &lt;item&gt;
     &lt;title&gt;$voiceName&lt;/title&gt;
-    &lt;subtitle&gt;Speak the active app's text as $voiceName&lt;/subtitle&gt;
+    &lt;subtitle&gt;Speak the active app's text as $voiceName; ⌥↩ to make this voice the default.&lt;/subtitle&gt;
     &lt;arg&gt;&lt;![CDATA[$voiceName]]&gt;&lt;/arg&gt;
   &lt;/item&gt;
 "
@@ -215,8 +227,9 @@ if [[ -n $query &amp;&amp; -z $items ]]; then
 
   items="
 &lt;item&gt;
-  &lt;title&gt;NO MATCHING VOICE&lt;/title&gt;
-  &lt;subtitle&gt;No match found among the active voices.&lt;/subtitle&gt;
+  &lt;title&gt;(No matching voice.)&lt;/title&gt;
+  &lt;subtitle&gt;No match found among the active voices; ⌥↩ to manage voices.&lt;/subtitle&gt;
+  &lt;arg&gt;&lt;![CDATA[(manage)]]&gt;&lt;/arg&gt;  
 &lt;/item&gt;
 "
 
@@ -450,6 +463,6 @@ EOF
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>https://github.com/mklement0/speak.awf</string>
+	<string>https://www.npmjs.com/package/speak.awf</string>
 </dict>
 </plist>

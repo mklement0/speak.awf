@@ -4,6 +4,13 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.1.6](https://github.com/mklement0/speak.awf/compare/v0.1.5...v0.1.6)** (2015-11-01):
+  * [enhancement] Option+Enter makes a specific voice the new default voice; on the
+     speak-with-default-voice and no-matching-voice-found result items it instead displays
+     System Preferences for managing the installed/active voices.
+  * [enhancement] Speak-with-default-voice result item now names the current default voice.
+  * [doc] `README.md` corrections.
+
 * **[v0.1.5](https://github.com/mklement0/speak.awf/compare/v0.1.4...v0.1.5)** (2015-10-30):
   * [doc] `README.md` update: `npm` badge and install instructions added.
 
