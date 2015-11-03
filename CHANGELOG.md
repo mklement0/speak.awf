@@ -4,8 +4,12 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.3.3](https://github.com/mklement0/speak.awf/compare/v0.3.2...v0.3.3)** (2015-11-03):
+  * [doc] `README.md` corrections and improvements.
+
 * **[v0.3.2](https://github.com/mklement0/speak.awf/compare/v0.3.1...v0.3.2)** (2015-11-03):
-  * [ehancement] The workflow is now in Afred 2's "Tools" category (was previously uncategorized).
+  * [dev] The workflow's *source code* is now in Alfred 2's "Tools" category (was previously uncategorized),
+    though it turns out that Alfred 2 defaults to "Uncategorised" on import (installation).
 
 * **[v0.3.1](https://github.com/mklement0/speak.awf/compare/v0.3.0...v0.3.1)** (2015-11-03):
   * [enhancement] The `say`-invoking hotkey now appends a space to the pasted text

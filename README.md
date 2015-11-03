@@ -163,20 +163,19 @@ With [Node.js](http://nodejs.org/) installed, install [the package](https://www.
 **Note**:
 
 * Whether you need `sudo` depends on how you installed Node.js and whether you've [changed permissions later](https://docs.npmjs.com/getting-started/fixing-npm-permissions); if you get an `EACCES` error, try again with `sudo`.
-* Alfred 2 will prompt you to import the workflow - confirm.
-  * _Caveat_: If you _reinstall_, existing customizations will be lost, unfortunately, and have to be reapplied.
+* Alfred 2 will prompt you to import the workflow - select a category (optional; "Tools" recommended), and confirm.
 * After importing, proceed with [customization](#customization) below.
 
 ## Manual installation
 
 * **Click [here](https://github.com/mklement0/speak.awf/blob/stable/archive/speak.awf.alfredworkflow?raw=true)** to start the download.
-* Open the downloaded file: Alfred 2 will prompt you to import the workflow - confirm.
+* Open the downloaded file: Alfred 2 will prompt you to import the workflow - select a category (optional; "Tools" recommended), and confirm.
   * _Caveat_: If you _reinstall_, existing customizations will be lost, unfortunately, and have to be reapplied.
 * After importing, proceed with [customization](#customization) below.
 
 # Customization
 
-_Caveat_: If you **reinstall or upgrade** this workflow, your custom keyboard shortcuts are retained,
+_Caveat_: If you **reinstall or upgrade** this workflow, your custom keyboard shortcuts and customized keywords are retained,
 but **the following aspects of customization must be performed _again_**:
 
 * You must **reassign the specific voices** assigned to the **3 predefined hotkey workflows** for speaking the active application's text (see below).
@@ -257,8 +256,12 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.3.3](https://github.com/mklement0/speak.awf/compare/v0.3.2...v0.3.3)** (2015-11-03):
+  * [doc] `README.md` corrections and improvements.
+
 * **[v0.3.2](https://github.com/mklement0/speak.awf/compare/v0.3.1...v0.3.2)** (2015-11-03):
-  * [ehancement] The workflow is now in Afred 2's "Tools" category (was previously uncategorized).
+  * [dev] The workflow's *source code* is now in Alfred 2's "Tools" category (was previously uncategorized),
+    though it turns out that Alfred 2 defaults to "Uncategorised" on import (installation).
 
 * **[v0.3.1](https://github.com/mklement0/speak.awf/compare/v0.3.0...v0.3.1)** (2015-11-03):
   * [enhancement] The `say`-invoking hotkey now appends a space to the pasted text
