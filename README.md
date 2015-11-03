@@ -33,7 +33,8 @@ especially for **multi-lingual use** (OS X allows on-demand download of voices i
 The workflow comes with two distinct feature groups:
 
 * Speak the **active application's text** with a **_specific_ voice**.
-  * Useful for multi-lingual setups where you want to **have text spoken in one of several languages on demand**.
+  * Useful for multi-lingual setups where you want to **have text spoken in one of several languages on demand**;
+    for instance, you could have one global keyboard shortcut for speaking text in English, and another for Spanish.
 
 * Speak **specified text** with **_one or more_ voices**, selectable by name(s) or language(s).
   * Useful for **interactive experimentation** with **multiple voices**, such as to contrast regional accents.
@@ -175,6 +176,14 @@ With [Node.js](http://nodejs.org/) installed, install [the package](https://www.
 
 # Customization
 
+_Caveat_: If you **reinstall or upgrade** this workflow, your custom keyboard shortcuts are retained,
+but **the following aspects of customization must be performed _again_**:
+
+* You must **reassign the specific voices** assigned to the **3 predefined hotkey workflows** for speaking the active application's text (see below).
+  * If you've manually added _additional_ hotkeys, they are, unfortunately, lost, and have to be recreated.
+* If you're using a custom _system_ hotkey for speaking the active application's text (not recommended), you must tell this workflow
+  about it again (see below).
+
 ## Customizing the speaking-the-active-application's-text-with-a-specific-voice feature
 
 Customization has two to three parts:
@@ -205,9 +214,7 @@ To define _additional_ hotkey-triggered voices:
 
 ### Configuration with a custom system keyboard shortcut
 
-Note that you'll have to do the following _every time you reinstall/upgrade_ the workflow:
-
-* Open Alfred's Preferences, locate this workflow (`Speak Active App's Text`), control-click on it in the list on the left, and select `Show in Finder`.
+* Open Alfred's Preferences, locate this workflow (`Speak - TTS (Text-To-Speech) Workflows`), control-click on it in the list on the left, and select `Show in Finder`.
 * Open file `toggleSpeaking` in a text editor and follow the instructions at the top of the file.
 
 ## Customizing the speaking-given-text-with-one-or-more-voices feature
@@ -215,7 +222,7 @@ Note that you'll have to do the following _every time you reinstall/upgrade_ the
 To assign a hotkey (global keyboard shortcut) to the feature that invokes `say`
 with the text currenctly selected in the active application:
 
-* Double-click on the `Hotkey` box next to the `say` keyword box.
+* Double-click on the `Hotkey` box below the `say` keyword box.
 * Assign a hotkey (global keyboard shortcut) of choice.
   * Recommendation: use `` ⌥` `` (Option+\`)
 
@@ -249,6 +256,13 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.3.1](https://github.com/mklement0/speak.awf/compare/v0.3.0...v0.3.1)** (2015-11-03):
+  * [fix] `say` now correctly reflects the current default voice even after changing it implicitly via hotkey.
+  * [fix] Cache files are now stored in a folder that reflects the actual bundle ID: 
+    `$HOME/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/net.same2u.speak.awf"` - the old folder
+    can safely be removed: `$HOME/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/net.same2u.say.awf"`
+  * [doc] `README.md` corrections and improvements.
 
 * **[v0.3.0](https://github.com/mklement0/speak.awf/compare/v0.1.6...v0.3.0)** (2015-11-02):
   * [major enhancements] Added keyword `say` for interactive experimentation with 

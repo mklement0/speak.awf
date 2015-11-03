@@ -4,6 +4,13 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.3.1](https://github.com/mklement0/speak.awf/compare/v0.3.0...v0.3.1)** (2015-11-03):
+  * [fix] `say` now correctly reflects the current default voice even after changing it implicitly via hotkey.
+  * [fix] Cache files are now stored in a folder that reflects the actual bundle ID: 
+    `$HOME/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/net.same2u.speak.awf"` - the old folder
+    can safely be removed: `$HOME/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/net.same2u.say.awf"`
+  * [doc] `README.md` corrections and improvements.
+
 * **[v0.3.0](https://github.com/mklement0/speak.awf/compare/v0.1.6...v0.3.0)** (2015-11-02):
   * [major enhancements] Added keyword `say` for interactive experimentation with 
     multiple voices, selectable by name(s) or language(s). Consistent use of modifiers

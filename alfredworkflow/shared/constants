@@ -3,10 +3,7 @@
 # To be SOURCED by the implementing scripts.
 
 # --- This workflow's bundle ID; sadly, must be duplicated from the workflow's settings for now.
-BUNDLE_ID='net.same2u.say.awf'
-# ---
-# -- This workflow's keyword;  sadly, must be duplicated from the workflow's settings for now.
-KEYWORD='say'
+BUNDLE_ID='net.same2u.speak.awf'
 # ---
 
 CACHE_FOLDER="$HOME/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/$BUNDLE_ID"

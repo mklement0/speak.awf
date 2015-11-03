@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Source the shared constants.
-# Defines BUNDLE_ID, KEYWORD, CACHEFILE_FILTER, CACHEFILE_LASTVSPEC, CACHEFILE_LASTQUERY, CACHEFILE_TEXT, ...
+# Defines BUNDLE_ID, CACHEFILE_FILTER, CACHEFILE_LASTVSPEC, CACHEFILE_LASTQUERY, CACHEFILE_TEXT, ...
 . shared/constants || exit
 
 # --- BEGIN: Helper functions
@@ -71,7 +71,7 @@ useDemoText=0
 [[ -n $txt ]] || useDemoText=1
 
 # REDISPLAY Alfred right away, so the user can continue to experiment.
-./redisplay
+./sayRedisplay
 
 # Loop over all specified voices and speak the text.
 IFS=',' read -ra vnameArray <<<"$vnames"

@@ -4,8 +4,6 @@
 <dict>
 	<key>bundleid</key>
 	<string>net.same2u.speak.awf</string>
-	<key>category</key>
-	<string>Tools</string>
 	<key>connections</key>
 	<dict>
 		<key>018CCEED-6253-400B-8084-176472CA7C73</key>
@@ -137,7 +135,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>018CCEED-6253-400B-8084-176472CA7C73</string>
+				<string>D7A82790-6BA8-4B53-86BD-E69F45324116</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -423,25 +421,6 @@ tell application "Alfred 2" to search "speak "</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>./toggleSpeaking "{query}"</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>D1E77F99-7158-4627-83A5-3E7831AA22F4</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
@@ -467,6 +446,25 @@ tell application "Alfred 2" to search "speak "</string>
 			<string>2ACB56CD-6586-40C8-987F-20B5F9E7FE4B</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>./toggleSpeaking "{query}"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>D1E77F99-7158-4627-83A5-3E7831AA22F4</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -552,7 +550,8 @@ else # Invoked on specific voice: make it the new default voice.
 
   ./changeDefaultVoice "$qry"
 
-fi</string>
+fi
+</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -562,35 +561,6 @@ fi</string>
 			<string>2CCC467D-EF60-42A6-8506-B46DEB355ED7</string>
 			<key>version</key>
 			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>1</integer>
-				<key>argument</key>
-				<integer>1</integer>
-				<key>argumenttext</key>
-				<string>say </string>
-				<key>hotkey</key>
-				<integer>50</integer>
-				<key>hotmod</key>
-				<integer>524288</integer>
-				<key>hotstring</key>
-				<string>`</string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>F220513E-1BF7-47F2-B959-4387C1A59173</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -649,7 +619,7 @@ pkill -fl ./say-it
 
 # Redisplay Alfred with the same keyword and query for 
 # continued experimentation.
-./redisplay</string>
+./sayRedisplay</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -680,6 +650,52 @@ tell application "Alfred 2" to search "say"</string>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>66E792AD-1946-44C6-8403-ADEA9E859FA3</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>1</integer>
+				<key>hotkey</key>
+				<integer>50</integer>
+				<key>hotmod</key>
+				<integer>524288</integer>
+				<key>hotstring</key>
+				<string>`</string>
+				<key>leftcursor</key>
+				<true/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>F220513E-1BF7-47F2-B959-4387C1A59173</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>script</key>
+				<string>tell application "Alfred 2" to search "say " &amp; "{query}" &amp; " "</string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>D7A82790-6BA8-4B53-86BD-E69F45324116</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -772,6 +788,11 @@ Note: To facilitate iterative experimentation, Alfred stays open when using this
 			<key>ypos</key>
 			<real>620</real>
 		</dict>
+		<key>D7A82790-6BA8-4B53-86BD-E69F45324116</key>
+		<dict>
+			<key>ypos</key>
+			<real>1170</real>
+		</dict>
 		<key>DA2D69BF-B764-4BB4-99AC-30DA28046A4A</key>
 		<dict>
 			<key>ypos</key>
@@ -780,7 +801,7 @@ Note: To facilitate iterative experimentation, Alfred stays open when using this
 		<key>F220513E-1BF7-47F2-B959-4387C1A59173</key>
 		<dict>
 			<key>ypos</key>
-			<real>890</real>
+			<real>1170</real>
 		</dict>
 		<key>FE06729C-AEB7-49A3-8748-1849D5DE61BF</key>
 		<dict>

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Source the shared constants.
-# Defines BUNDLE_ID, KEYWORD, CACHEFILE_FILTER, CACHEFILE_LASTVSPEC, CACHEFILE_LASTQUERY, CACHEFILE_TEXT, ...
+# Defines BUNDLE_ID, CACHEFILE_FILTER, CACHEFILE_LASTVSPEC, CACHEFILE_LASTQUERY, CACHEFILE_TEXT, ...
 . shared/constants || exit
 
 # Read all arguments (we only expect 1), trimming trailing newlines (only).
@@ -185,7 +185,16 @@ echo '<?xml version="1.0"?>
 fi
 
 # Output the script-filter doc.
-cat "$CACHEFILE_FILTER"
+if (( ! isFiltered && useCached )); then
+  # !! If we're using a cached script-filter document, we must ensure
+  # !! that the name of the default voice in the first result item is current,
+  # !! given that keyword 'speak' and its hotkey-based companions can change the
+  # !! default voice at any time.
+  defaultVoice=$(defaults read com.apple.speech.voice.prefs SelectedVoiceName)
+  sed -E 's/(Default voice )(\([^)]+\))/\1('"$defaultVoice"')/' "$CACHEFILE_FILTER"
+else
+  cat "$CACHEFILE_FILTER"
+fi
 
 # Remember the last voice specifier so that we can decide whether we need to recreate the filter doc next time.
 printf '%s' "${voiceSpecType}${voiceSpecs}" > "$CACHEFILE_LASTVSPEC"

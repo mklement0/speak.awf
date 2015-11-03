@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Source the shared constants.
+# Defines BUNDLE_ID, CACHEFILE_FILTER, CACHEFILE_LASTVSPEC, CACHEFILE_LASTQUERY, CACHEFILE_TEXT, ...
+. shared/constants || exit
+
+# --- BEGIN: Helper functions
+
+# Redisplays Alfred with the same query as before, so the user can continue to experiment.
+redisplay() {
+  local lastQuery=$(<"$CACHEFILE_LASTQUERY")
+  local kKEYWORD='say' # the speak-given-text keyword - note: be sure to keep it in sync with the actual keyword.
+  osascript -e 'tell application "Alfred 2" to search "'"${kKEYWORD}${lastQuery//\"/\\\"}"'"'
+}
+
+# --- END: Helper functions
+
+redisplay
