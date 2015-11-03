@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+# Source the shared constants.
+# Defines CACHEFILE_VOICENAMES, ...
+. shared/constants || exit
+
+# Remove the @ prefix, if any, from the voice name and trim surrounding whitespace.
+read -r voice <<<"${*/@}"
+
+# To be safe, cache the list of active voices whenever there's no voice.
+if [[ -z $voice ]]; then
+  ./voices -bl > "$CACHEFILE_VOICENAMES"
+fi
+IFS=$'\n' read -d '' -ra voiceNames < "$CACHEFILE_VOICENAMES"
+
+# Get name of default voice.
+defaultVoice=$(defaults read com.apple.speech.voice.prefs SelectedVoiceName)
+
+kDefaultVoiceItem="
+<item>
+  <title>Default voice ($defaultVoice)</title>
+  <subtitle>Speak active app's text with default voice or type voice name. Invoke again to stop speech.</subtitle>
+  <arg><![CDATA[]]></arg>
+</item>
+"
+
+
+# Turn on case-INsensitive matching.
+shopt -s nocasematch nocaseglob
+items=''
+[[ -z $voice ]] && items=$kDefaultVoiceItem
+
+for voiceName in "${voiceNames[@]}"; do
+
+  if [[ $voiceName =~ ^"$voice" ]]; then
+    items+="
+<item>
+    <title>$voiceName</title>
+    <subtitle>Speak the active app's text as $voiceName; ⌥↩ makes voice the default without speaking.</subtitle>
+    <arg><![CDATA[$voiceName]]></arg>
+  </item>
+"
+
+  fi
+
+done
+
+# voice specified but no match found?
+if [[ -n $voice && -z $items ]]; then
+
+  items="
+<item>
+  <title>(No matching voice.)</title>
+  <subtitle>No match found among the active voices; ⌥↩ manages voices.</subtitle>
+  <arg><![CDATA[(manage)]]></arg>  
+</item>
+"
+
+fi
+
+# Output resulting script-filter XML.
+cat <<EOF
+<?xml version="1.0"?>
+<items>
+  ${items}
+</items>
+EOF

@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+# Source the shared constants.
+# Defines BUNDLE_ID, KEYWORD, CACHEFILE_FILTER, CACHEFILE_LASTVSPEC, CACHEFILE_LASTQUERY, CACHEFILE_TEXT, ...
+. shared/constants || exit
+
+# --- BEGIN: Helper functions
+
+# Given a voice name, defines the following global variables with internal voice information:
+#   InternalVoiceName  # e.g., 'Anna'
+#   VoiceCreator       # e.g., 1886745202
+#   VoiceID            # e.g., 274733789
+# Uses a persistent cache *file*, given that these IDs never change.
+getCachedVoiceInternals() {
+  local voice=$1
+  local cacheFile="${CACHEFILE_VOICEINTERNALS_PREFIX}${voice}"
+  # Create the cache file, if it doesn't exist yet - this is a fairly expensive operation.
+  # `voices -i <voice>` outputs something like 'InternalVoiceName=Anna VoiceCreator=1886745202 VoiceID=274733789'
+  [[ -f $cacheFile ]] || { ./voices -i "$voice" > "$cacheFile" || return; }
+  # Simply *source* the cache file, which will create our global variables.
+  . "$cacheFile" || return
+}
+
+
+# Caches the custom speaking rates from com.apple.speech.voice.prefs for *this shell only* (given that it can change frequently),
+# in global variable
+#    $customSpeakingRates
+# $customSpeakingRates is filled - once for this shell - as follows:
+#   Get all custom speaking rates (words per minute) from the preferences file - on a pristine system, not even the file may exist, let alone custom rates).
+#   Strip all chars. so that only (voice-creator, voice-ID, custom-rate) line triplets remain; e.g.:
+#     1886745202  # voice creator
+#     184844493   # voice ID
+#     200          # speaking rate; a value *roughly* >= 90 <= 360
+getCachedCustomSpeakingRates() {
+  [[ -z $customSpeakingRates && -n ${customSpeakingRates-unset} ]] && customSpeakingRates=$(defaults read com.apple.speech.voice.prefs VoiceRateDataArray 2>/dev/null | tr -d '() ,'  | sed '/^$/d' )
+}
+
+# Outputs the custom speaking rate for the specified voice, if it is defined - range is *roughly* between 90 and 360 - apparently, it's possible to at least get slightly lower.
+# If not defined, outputs nothing.
+getCustomSpeakingRate() {
+  local voice=$1 customRate
+  
+  # Set global variable $customSpeakingRates to contain any defined custom-speaking rates as 
+  # (voice-creator, voice-ID, custom-rate) *line triplets*.
+  getCachedCustomSpeakingRates
+
+  if [[ -n $customSpeakingRates ]]; then
+
+    # Get (cached) internal identifiers for the target voice.
+    # This sets global variables InternalVoiceName VoiceCreator VoiceID
+    getCachedVoiceInternals "$voice"
+
+
+    # Extract the custom speaking rate, if any, for the target voice.
+    customRate=$(awk -v first="$VoiceCreator" -v second="$VoiceID" '$1 == second  && prev == first { getline; print $1; exit } { prev = $1 }' <<<"$customSpeakingRates")
+
+    echo "$customRate"
+
+  fi
+}
+
+# --- END: Helper functions
+
+# The voice name(s) are passed in from the script filter; comma-separated, if there are multiple.
+vnames="$*"
+
+# The text to speak is taken from a cache file.
+# If no text was given, we'll use the demo text - see below.
+txt="$(<"$CACHEFILE_TEXT")"
+useDemoText=0
+[[ -n $txt ]] || useDemoText=1
+
+# REDISPLAY Alfred right away, so the user can continue to experiment.
+./redisplay
+
+# Loop over all specified voices and speak the text.
+IFS=',' read -ra vnameArray <<<"$vnames"
+for vname in "${vnameArray[@]}"; do 
+
+    # Accept '~' as a placeholder for the default voice.
+  if [[ $vname == "~" ]]; then
+    vname=$(defaults read com.apple.speech.voice.prefs SelectedVoiceName)
+  fi
+
+  # If no text was given, use the sample text, as displayed in 
+  # System Preferences and output by `say -v \?`
+  if (( useDemoText )); then
+    txt="$(say -v ? | egrep "^$vname +[a-z][a-z][_\-]\w+ " | awk -F '#' '{ print $2; }')"
+  fi
+
+  # !! Sadly, as of OSX 10.11, `say` doesn't respect custom speaking rates defined in System Preferences 
+  # !! when used with an explicit voice name (-v) (reported to Apple, 
+  # !! so we have to extract the custom rates ourselves and specify them explicitly with -r.
+  # !! Should `say` ever become custom-rate aware, this will no longer be needed.
+  rateOpts=()
+  customRate=$(getCustomSpeakingRate "$vname")
+  (( customRate > 0 )) && rateOpts=( -r "$customRate" )
+
+  # Speak.
+  say -v "$vname" "${rateOpts[@]}" -- "$txt"
+
+done
+
+# !! We do NOT clean up our cache files,
+# !! as that would interfere with redisplaying the same query.

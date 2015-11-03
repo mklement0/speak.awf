@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# To be SOURCED by the implementing scripts.
+
+# --- This workflow's bundle ID; sadly, must be duplicated from the workflow's settings for now.
+BUNDLE_ID='net.same2u.say.awf'
+# ---
+# -- This workflow's keyword;  sadly, must be duplicated from the workflow's settings for now.
+KEYWORD='say'
+# ---
+
+CACHE_FOLDER="$HOME/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/$BUNDLE_ID"
+
+CACHEFILE_VOICES="$CACHE_FOLDER/voices.txt" # plain-text list of all voice names, their language ID, and demo text
+CACHEFILE_VOICENAMES="$CACHE_FOLDER/voicenames.txt" # plain-text list of all voice *names only* - for the simpler 'speak' script filter
+CACHEFILE_VOICEINTERNALS_PREFIX="$CACHE_FOLDER/voiceInternals_" # internal IDs for a given voice, as reported by `voices -i <voice>`; suffix with voice name to get full filename
+CACHEFILE_FILTER="$CACHE_FOLDER/voices.xml" # the script-filter XML document last output
+CACHEFILE_LASTVSPEC="$CACHE_FOLDER/lastVspec.txt" # the last pattern used to select a voice
+CACHEFILE_LASTQUERY="$CACHE_FOLDER/lastQuery.txt" # the query exactly as entered
+CACHEFILE_TEXT="$CACHE_FOLDER/say.txt" # text to speak - to be read by next workflow step

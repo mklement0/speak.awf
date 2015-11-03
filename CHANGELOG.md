@@ -4,6 +4,13 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.3.0](https://github.com/mklement0/speak.awf/compare/v0.1.6...v0.3.0)** (2015-11-02):
+  * [major enhancements] Added keyword `say` for interactive experimentation with 
+    multiple voices, selectable by name(s) or language(s). Consistent use of modifiers
+    keys across keywords `speak` and `say`: `⌥↩` to make a specific voice the new default /
+    invoke `System Preferences` to manage voices, `⌃↩` to stop ongoing speech, `⇧↩` to clear
+    the current argument list.
+
 * **[v0.1.6](https://github.com/mklement0/speak.awf/compare/v0.1.5...v0.1.6)** (2015-11-01):
   * [enhancement] Option+Enter makes a specific voice the new default voice; on the
      speak-with-default-voice and no-matching-voice-found result items it instead displays

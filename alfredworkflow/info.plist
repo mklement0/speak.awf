@@ -8,11 +8,57 @@
 	<string>Tools</string>
 	<key>connections</key>
 	<dict>
+		<key>018CCEED-6253-400B-8084-176472CA7C73</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>7510A4A3-DA12-4937-B63F-F577E41E6E83</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>2CCC467D-EF60-42A6-8506-B46DEB355ED7</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string>Make this the default voice / manage voices in System Preferences.</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>5C6E074C-987F-46C4-99D1-6B6621D71E94</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Stop ongoing speech.</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>66E792AD-1946-44C6-8403-ADEA9E859FA3</string>
+				<key>modifiers</key>
+				<integer>131072</integer>
+				<key>modifiersubtext</key>
+				<string>Clear current arguments.</string>
+			</dict>
+		</array>
 		<key>2ACB56CD-6586-40C8-987F-20B5F9E7FE4B</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>D1E77F99-7158-4627-83A5-3E7831AA22F4</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>2CCC467D-EF60-42A6-8506-B46DEB355ED7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>7457C8BD-4F7A-4264-A8AD-42E0910899A3</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -45,19 +91,35 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>56C28078-FC5E-4095-952C-8C244ABFCFB5</string>
-				<key>modifiers</key>
-				<integer>524288</integer>
-				<key>modifiersubtext</key>
-				<string>On a specific voice: make it the new default; otherwise: manage voices in System Preferences.</string>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
 				<string>2543CBB6-49FB-46A2-8416-091776E699A0</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B4AFE87B-4C02-408F-8867-16669843F79D</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Stop ongoing speech.</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>56C28078-FC5E-4095-952C-8C244ABFCFB5</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string>Make this the default voice / manage voices in System Preferences.</string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>41B33042-ADCB-4B49-BAFF-98594B679856</string>
+				<key>modifiers</key>
+				<integer>131072</integer>
+				<key>modifiersubtext</key>
+				<string>Clear current arguments.</string>
 			</dict>
 		</array>
 		<key>DA2D69BF-B764-4BB4-99AC-30DA28046A4A</key>
@@ -71,70 +133,28 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>F220513E-1BF7-47F2-B959-4387C1A59173</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>018CCEED-6253-400B-8084-176472CA7C73</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>Michael Klement &lt;mklement0@gmail.com&gt;</string>
 	<key>description</key>
-	<string>Speak the active application's text with specific voices.</string>
+	<string>Speak the active application's text or given text with specific voices.</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Speak Active Application Text</string>
+	<string>Speak - TTS (Text-To-Speech) Workflows</string>
 	<key>objects</key>
 	<array>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<true/>
-				<key>output</key>
-				<integer>0</integer>
-				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
-				<false/>
-				<key>text</key>
-				<string>{query}</string>
-				<key>title</key>
-				<string>Speak Active Application Text</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>B3850E70-7757-4579-A5E6-90FF16882064</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string># Sets a new default voice.
-
-voice='{query}'
-
-if [[ $voice == '(manage)' ]]; then
-  ./manageVoices
-else
-  ./voices -qd "$voice"  2&gt;&amp;1 &amp;&amp; echo "{query} is now the default voice."
-fi
-</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>56C28078-FC5E-4095-952C-8C244ABFCFB5</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -168,6 +188,29 @@ fi
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string># For symmetry with "say", we try to stop speech also when using ⌃↩ 
+# even though simple reinvoking is sufficient.
+
+./toggleSpeaking
+</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B4AFE87B-4C02-408F-8867-16669843F79D</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>escaping</key>
@@ -185,63 +228,7 @@ fi
 				<key>runningsubtext</key>
 				<string>Getting active voices...</string>
 				<key>script</key>
-				<string>read -r query &lt;&lt;&lt;"{query}"
-
-kTempFile=/tmp/net.same2u.awf.SpeakSelection.${USER}.cache
-
-if [[ -z $query ]]; then
-  ./voices -bl &gt; "$kTempFile"
-fi
-IFS=$'\n' read -d '' -ra voiceNames &lt; "$kTempFile"
-
-kDefaultVoiceItem="
-&lt;item&gt;
-  &lt;title&gt;Default voice ($(defaults read com.apple.speech.voice.prefs SelectedVoiceName))&lt;/title&gt;
-  &lt;subtitle&gt;Speak the active app's text with the default voice.&lt;/subtitle&gt;
-  &lt;arg&gt;&lt;![CDATA[]]&gt;&lt;/arg&gt;
-&lt;/item&gt;
-"
-
-
-# Turn on case-INsensitive matching.
-items=''
-[[ -z $query ]] &amp;&amp; items=$kDefaultVoiceItem
-shopt -s nocasematch nocaseglob
-
-for voiceName in "${voiceNames[@]}"; do
-
-  if [[ $voiceName =~ ^"$query" ]]; then
-    items+="
-&lt;item&gt;
-    &lt;title&gt;$voiceName&lt;/title&gt;
-    &lt;subtitle&gt;Speak the active app's text as $voiceName; ⌥↩ to make this voice the default.&lt;/subtitle&gt;
-    &lt;arg&gt;&lt;![CDATA[$voiceName]]&gt;&lt;/arg&gt;
-  &lt;/item&gt;
-"
-
-  fi
-
-done
-
-if [[ -n $query &amp;&amp; -z $items ]]; then
-
-  items="
-&lt;item&gt;
-  &lt;title&gt;(No matching voice.)&lt;/title&gt;
-  &lt;subtitle&gt;No match found among the active voices; ⌥↩ to manage voices.&lt;/subtitle&gt;
-  &lt;arg&gt;&lt;![CDATA[(manage)]]&gt;&lt;/arg&gt;  
-&lt;/item&gt;
-"
-
-fi
-
-# Output resulting script-filter XML.
-cat &lt;&lt;EOF
-&lt;?xml version="1.0"?&gt;
-&lt;items&gt;
-  ${items}
-&lt;/items&gt;
-EOF
+				<string>./speakScriptFilter "{query}"
 </string>
 				<key>subtext</key>
 				<string>Note that if you specify a voice, it will become the default.</string>
@@ -256,6 +243,82 @@ EOF
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
 			<string>B42926FE-9AA1-4B0E-B8F4-17E422E8F719</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Speak</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>B3850E70-7757-4579-A5E6-90FF16882064</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string># Sets a new default voice.
+
+voice="{query}"
+
+if [[ -z $voice ]]; then # invoked on default voice -&gt; open System Preferences to manage voices
+  ./manageVoices
+else
+  ./voices -qd "$voice"  2&gt;&amp;1 &amp;&amp; echo "$voice is now the default voice."
+fi
+</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>56C28078-FC5E-4095-952C-8C244ABFCFB5</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string># Clear the current arguments.
+# !! The workflow's keyword is duplicated here - keep it in sync with 
+# !! the actualy keyword.
+
+tell application "Alfred 2" to search "speak "</string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>41B33042-ADCB-4B49-BAFF-98594B679856</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -296,7 +359,7 @@ EOF
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>./toggleSpeaking '{query}'
+				<string>./toggleSpeaking "{query}"
 </string>
 				<key>type</key>
 				<integer>0</integer>
@@ -345,7 +408,7 @@ EOF
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>./toggleSpeaking '{query}'
+				<string>./toggleSpeaking "{query}"
 </string>
 				<key>type</key>
 				<integer>0</integer>
@@ -354,6 +417,25 @@ EOF
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>FE06729C-AEB7-49A3-8748-1849D5DE61BF</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>./toggleSpeaking "{query}"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>D1E77F99-7158-4627-83A5-3E7831AA22F4</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -394,72 +476,316 @@ EOF
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>./toggleSpeaking '{query}'
-</string>
+				<string># Note: Only the *voice(s)* are passed via parameter; the text to speak
+#       is relayed via a temporary file.
+qry="{query}"
+
+# If a filter matched no voice, we interpret ↩ as the intent to manage
+# voices in System Preferences (in addition to supporting ⌥↩).
+if [[ $qry == '(manage)' ]]; then
+
+  ./manageVoices
+
+else # otherwise: speak with the specified voice(s)
+
+  ./say-it "$qry"
+
+fi</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>D1E77F99-7158-4627-83A5-3E7831AA22F4</string>
+			<string>7510A4A3-DA12-4937-B63F-F577E41E6E83</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Say</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>7457C8BD-4F7A-4264-A8AD-42E0910899A3</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string># Note: Only the *voice(s)* are passed via parameter; the text to speak
+#       is relayed via a temporary file.
+qry="{query}"
+
+# '~' signals that ⌥↩ was pressed on the default-voice item.
+# a ',' in the query implies multiple voice and thus that the
+# speak-with-all-matching-voices entry was chosen
+# '(manage)' means that a filter didn't match anything and that the no-match
+# item was chosen.
+# In any of these cases we interpret this to mean: manage the active voices in System Preferences.
+if [[ $qry == '~' || $qry == '(manage)' || $qry == *,* ]]; then 
+
+  ./manageVoices
+
+else # Invoked on specific voice: make it the new default voice.
+
+  ./changeDefaultVoice "$qry"
+
+fi</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>2CCC467D-EF60-42A6-8506-B46DEB355ED7</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>1</integer>
+				<key>argument</key>
+				<integer>1</integer>
+				<key>argumenttext</key>
+				<string>say </string>
+				<key>hotkey</key>
+				<integer>50</integer>
+				<key>hotmod</key>
+				<integer>524288</integer>
+				<key>hotstring</key>
+				<string>`</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>F220513E-1BF7-47F2-B959-4387C1A59173</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>say</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Getting list of active voices...</string>
+				<key>script</key>
+				<string>./sayScriptFilter "{query}"</string>
+				<key>subtext</key>
+				<string>Speak text out loud using text-to-speech synthesis.</string>
+				<key>title</key>
+				<string>Speak specified text</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>018CCEED-6253-400B-8084-176472CA7C73</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string># Stop ongoing playback.
+
+# Kill the currently ongoing `say` command.
+pkill say
+
+# Kill the batch file (and Alfred's command that launched it) to
+# also prevent further `say` invocations if the command currently
+# being spoken involves multiple voices.
+pkill -fl ./say-it
+
+# Redisplay Alfred with the same keyword and query for 
+# continued experimentation.
+./redisplay</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5C6E074C-987F-46C4-99D1-6B6621D71E94</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string># Clear the current arguments.
+# !! The workflow's keyword is duplicated here - keep it in sync with 
+# !! the actualy keyword.
+
+tell application "Alfred 2" to search "say"</string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>66E792AD-1946-44C6-8403-ADEA9E859FA3</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
 	</array>
 	<key>readme</key>
-	<string></string>
+	<string>* Keyword "speak" is for speaking the *active application's text* (via the *system's* global hotkey) with a *single voice*, as a complement to triggering this functionality for predefined voices per hotkey.
+Note: For technical reasons, speaking with a given voice invariably makes that voice the new default voice.
+
+* Keyword "say" is for speaking demo/typed/pasted text (optionally obtained from the active application via hotkey) with potentially *multiple* voices, filtered by names or languages, for *interactive experimentation*.
+Note: To facilitate iterative experimentation, Alfred stays open when using this keyword.</string>
 	<key>uidata</key>
 	<dict>
+		<key>018CCEED-6253-400B-8084-176472CA7C73</key>
+		<dict>
+			<key>ypos</key>
+			<real>890</real>
+		</dict>
 		<key>2543CBB6-49FB-46A2-8416-091776E699A0</key>
 		<dict>
 			<key>ypos</key>
-			<real>330</real>
+			<real>10</real>
 		</dict>
 		<key>2ACB56CD-6586-40C8-987F-20B5F9E7FE4B</key>
 		<dict>
 			<key>ypos</key>
-			<real>690</real>
+			<real>620</real>
+		</dict>
+		<key>2CCC467D-EF60-42A6-8506-B46DEB355ED7</key>
+		<dict>
+			<key>ypos</key>
+			<real>850</real>
 		</dict>
 		<key>2F5D4BE9-D32E-4B42-B013-913E47802764</key>
 		<dict>
 			<key>ypos</key>
-			<real>450</real>
+			<real>420</real>
 		</dict>
 		<key>3E85F86E-06F9-4130-886D-BE9AE9FB8165</key>
 		<dict>
 			<key>ypos</key>
-			<real>450</real>
+			<real>420</real>
+		</dict>
+		<key>41B33042-ADCB-4B49-BAFF-98594B679856</key>
+		<dict>
+			<key>ypos</key>
+			<real>310</real>
 		</dict>
 		<key>56C28078-FC5E-4095-952C-8C244ABFCFB5</key>
 		<dict>
 			<key>ypos</key>
-			<real>200</real>
+			<real>210</real>
+		</dict>
+		<key>5C6E074C-987F-46C4-99D1-6B6621D71E94</key>
+		<dict>
+			<key>ypos</key>
+			<real>950</real>
+		</dict>
+		<key>66E792AD-1946-44C6-8403-ADEA9E859FA3</key>
+		<dict>
+			<key>ypos</key>
+			<real>1050</real>
+		</dict>
+		<key>7457C8BD-4F7A-4264-A8AD-42E0910899A3</key>
+		<dict>
+			<key>ypos</key>
+			<real>770</real>
+		</dict>
+		<key>7510A4A3-DA12-4937-B63F-F577E41E6E83</key>
+		<dict>
+			<key>ypos</key>
+			<real>750</real>
 		</dict>
 		<key>B3850E70-7757-4579-A5E6-90FF16882064</key>
 		<dict>
 			<key>ypos</key>
-			<real>200</real>
+			<real>210</real>
 		</dict>
 		<key>B42926FE-9AA1-4B0E-B8F4-17E422E8F719</key>
 		<dict>
 			<key>ypos</key>
-			<real>330</real>
+			<real>110</real>
+		</dict>
+		<key>B4AFE87B-4C02-408F-8867-16669843F79D</key>
+		<dict>
+			<key>ypos</key>
+			<real>110</real>
 		</dict>
 		<key>D1E77F99-7158-4627-83A5-3E7831AA22F4</key>
 		<dict>
 			<key>ypos</key>
-			<real>690</real>
+			<real>620</real>
 		</dict>
 		<key>DA2D69BF-B764-4BB4-99AC-30DA28046A4A</key>
 		<dict>
 			<key>ypos</key>
-			<real>570</real>
+			<real>520</real>
+		</dict>
+		<key>F220513E-1BF7-47F2-B959-4387C1A59173</key>
+		<dict>
+			<key>ypos</key>
+			<real>890</real>
 		</dict>
 		<key>FE06729C-AEB7-49A3-8748-1849D5DE61BF</key>
 		<dict>
 			<key>ypos</key>
-			<real>570</real>
+			<real>520</real>
 		</dict>
 	</dict>
 	<key>webaddress</key>
