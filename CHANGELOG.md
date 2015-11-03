@@ -4,7 +4,12 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.3.2](https://github.com/mklement0/speak.awf/compare/v0.3.1...v0.3.2)** (2015-11-03):
+  * [ehancement] The workflow is now in Afred 2's "Tools" category (was previously uncategorized).
+
 * **[v0.3.1](https://github.com/mklement0/speak.awf/compare/v0.3.0...v0.3.1)** (2015-11-03):
+  * [enhancement] The `say`-invoking hotkey now appends a space to the pasted text
+    so as to allow typing `@` right away to select a voice or voices of interest.
   * [fix] `say` now correctly reflects the current default voice even after changing it implicitly via hotkey.
   * [fix] Cache files are now stored in a folder that reflects the actual bundle ID: 
     `$HOME/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/net.same2u.speak.awf"` - the old folder

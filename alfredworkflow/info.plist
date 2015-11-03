@@ -4,6 +4,8 @@
 <dict>
 	<key>bundleid</key>
 	<string>net.same2u.speak.awf</string>
+	<key>category</key>
+	<string>Tools</string>
 	<key>connections</key>
 	<dict>
 		<key>018CCEED-6253-400B-8084-176472CA7C73</key>
