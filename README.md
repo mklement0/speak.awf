@@ -88,7 +88,7 @@ For the most part, this works fine, but occasionally, especially under heavy sys
 (If you know of a way to invoke this system feature _programmatically_, do let me know.)
   * If speaking doesn't start, at least the part of switching to the target voice
     should have succeeded, so you can then try to use the _system_ keyboard 
-    shortcut (`Option+Esc` by default) to tigger speaking.
+    shortcut (`Option+Esc` by default) to trigger speaking.
 
 ## Speak specified text with one or more voices
 
@@ -170,7 +170,6 @@ With [Node.js](http://nodejs.org/) installed, install [the package](https://www.
 
 * **Click [here](https://github.com/mklement0/speak.awf/blob/stable/archive/speak.awf.alfredworkflow?raw=true)** to start the download.
 * Open the downloaded file: Alfred 2 will prompt you to import the workflow - select a category (optional; "Tools" recommended), and confirm.
-  * _Caveat_: If you _reinstall_, existing customizations will be lost, unfortunately, and have to be reapplied.
 * After importing, proceed with [customization](#customization) below.
 
 # Customization
@@ -255,6 +254,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.3.4](https://github.com/mklement0/speak.awf/compare/v0.3.3...v0.3.4)** (2015-11-07):
+  * [doc] `README.md` corrections and improvements.
 
 * **[v0.3.3](https://github.com/mklement0/speak.awf/compare/v0.3.2...v0.3.3)** (2015-11-03):
   * [doc] `README.md` corrections and improvements.
