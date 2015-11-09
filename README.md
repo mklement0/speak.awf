@@ -168,7 +168,7 @@ With [Node.js](http://nodejs.org/) installed, install [the package](https://www.
 
 ## Manual installation
 
-* **Click [here](https://github.com/mklement0/speak.awf/blob/stable/archive/speak.awf.alfredworkflow?raw=true)** to start the download.
+* **Click [here](https://github.com/mklement0/speak.awf/blob/stable/archive/net.same2u.speak.awf.alfredworkflow?raw=true)** to download the installer.
 * Open the downloaded file: Alfred 2 will prompt you to import the workflow - select a category (optional; "Tools" recommended), and confirm.
 * After importing, proceed with [customization](#customization) below.
 
@@ -254,6 +254,9 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.3.5](https://github.com/mklement0/speak.awf/compare/v0.3.4...v0.3.5)** (2015-11-08):
+  * [doc] `README.md` link to current installer fixed.
 
 * **[v0.3.4](https://github.com/mklement0/speak.awf/compare/v0.3.3...v0.3.4)** (2015-11-07):
   * [doc] `README.md` corrections and improvements.

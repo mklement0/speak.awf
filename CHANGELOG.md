@@ -4,6 +4,9 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.3.5](https://github.com/mklement0/speak.awf/compare/v0.3.4...v0.3.5)** (2015-11-08):
+  * [doc] `README.md` link to current installer fixed.
+
 * **[v0.3.4](https://github.com/mklement0/speak.awf/compare/v0.3.3...v0.3.4)** (2015-11-07):
   * [doc] `README.md` corrections and improvements.
 
