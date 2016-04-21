@@ -24,7 +24,7 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# speak.awf &mdash; introduction
+# speak.awf &mdash; Alfred 2 TTS (text-to-speech) workflows
 
 An **[Alfred 2](http://alfredapp.com) workflow** that **uses OS X's TTS (text-to-speech) feature to speak text aloud**,
 especially for **multi-lingual use** (OS X allows on-demand download of voices in other languages).  
