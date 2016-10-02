@@ -150,7 +150,7 @@ vercomp () {
 
 getInstalledWfsRootFolder() {
   local plist parentFolder folder
-  plist="$HOME/Library/Preferences/com.runningwithcrayons.Alfred-Preferences.plist"
+  plist="$HOME/Library/Preferences/com.runningwithcrayons.Alfred-Preferences-3.plist"
   [[ -f $plist ]] || die "Cannot locate Alfred's preferences plist file: $plist"
   # Look for a sync folder first...
   parentFolder=$(/usr/libexec/PlistBuddy -c 'print :syncfolder' "$plist" 2> /dev/null)
