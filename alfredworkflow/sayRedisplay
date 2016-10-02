@@ -10,7 +10,7 @@
 redisplay() {
   local lastQuery=$(<"$CACHEFILE_LASTQUERY")
   local kKEYWORD='say' # the speak-given-text keyword - note: be sure to keep it in sync with the actual keyword.
-  osascript -e 'tell application "Alfred 2" to search "'"${kKEYWORD}${lastQuery//\"/\\\"}"'"'
+  osascript -e 'tell application "Alfred 3" to search "'"${kKEYWORD}${lastQuery//\"/\\\"}"'"'
 }
 
 # --- END: Helper functions

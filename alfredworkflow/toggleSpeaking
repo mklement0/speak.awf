@@ -27,7 +27,7 @@ toggleSpeaking [voiceName]\n\
   voice.\n\
 \n\
   NOTE: Use of this script only makes sense when invoked via a global keyboard\n\
-        shortcut or from an app like Alfred 2.\n\
+        shortcut or from an app like Alfred.\n\
         Prerequisites:\n\
          * In System Preferences > Dictation & Speech > Text to Speech,\n\
            'Speak selected text when the key is pressed' must be ON.\n\

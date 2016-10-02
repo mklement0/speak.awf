@@ -4,6 +4,10 @@ Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
 
+* **[v0.4.0](https://github.com/mklement0/speak.awf/compare/v0.3.5...v0.4.0)** (2016-10-02):
+  * [breaking change] Updated to work with Alfred 3. 
+    If you still need Alfred 2 support, download v0.3.5.
+
 * **[v0.3.5](https://github.com/mklement0/speak.awf/compare/v0.3.4...v0.3.5)** (2015-11-08):
   * [doc] `README.md` link to current installer fixed.
 

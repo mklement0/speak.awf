@@ -5,7 +5,7 @@
 
 **Contents**
 
-- [speak.awf &mdash; introduction](#speakawf-&mdash-introduction)
+- [speak.awf &mdash; Alfred 3 TTS (text-to-speech) workflows](#speakawf-&mdash-alfred-3-tts-text-to-speech-workflows)
   - [Speaking the active application's text with a specific voice](#speaking-the-active-applications-text-with-a-specific-voice)
   - [Speak specified text with one or more voices](#speak-specified-text-with-one-or-more-voices)
     - [Feature summary](#feature-summary)
@@ -24,11 +24,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# speak.awf &mdash; Alfred 2 TTS (text-to-speech) workflows
+# speak.awf &mdash; Alfred 3 TTS (text-to-speech) workflows
 
-An **[Alfred 2](http://alfredapp.com) workflow** that **uses OS X's TTS (text-to-speech) feature to speak text aloud**,
-especially for **multi-lingual use** (OS X allows on-demand download of voices in other languages).  
-<sup>Note: Use of workflows in Alfred 2 requires the paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on - an investment well worth making.</sup>
+An **[Alfred 3](http://alfredapp.com) workflow** that **uses macOS's TTS (text-to-speech) feature to speak text aloud**,
+especially for **multi-lingual use** (macOS allows on-demand download of voices in other languages).  
+<sup>Note: Use of workflows in Alfred 3 requires the paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on - an investment well worth making.</sup>
 
 The workflow comes with two distinct feature groups:
 
@@ -71,7 +71,7 @@ is still in progress _stops_ it.
 _all_ text may be spoken implicitly (e.g., in `TextEdit.app`), or, in `Safari.app`,
 Reader view (if available) is automatically activated to read only the text
 of interest.  
-Conversely, however, non-native OS X applications may not report even explicitly
+Conversely, however, non-native macOS applications may not report even explicitly
 selected text to the system; in that case, use the global keyboard shortcut
 associated with the `say` keyword (see next chapter).
 
@@ -94,10 +94,10 @@ For the most part, this works fine, but occasionally, especially under heavy sys
 
 This feature group comprises:
 
-* **Keyword `say`**, which speaks **given text** as part of the Alfred 2 command line, with **_one or more_ voices selectable by name(s) or language(s)**.
+* **Keyword `say`**, which speaks **given text** as part of the Alfred 3 command line, with **_one or more_ voices selectable by name(s) or language(s)**.
 * A **global keyboard shortcut that displays `say` with the _explicitly selected text_ in the active application**.  
 This is not only useful for speaking an application's text with _multiple_ voices,
-but also for speaking explicitly selected text in _non-native_ OS X applications, 
+but also for speaking explicitly selected text in _non-native_ macOS applications, 
 whose selected text the `speak` keyword wouldn't recognize.
 
 
@@ -142,9 +142,9 @@ Additionally, using **modifier keys** alongside `↩` (Return) offers **addition
 
 ## Prerequisites
 
- * OS X 10.10 or higher
-    * If you only use the `say` keyword, you can use the workflow on older OS X versions too, provided you install it [manually](#manual-installation).
- * [Alfred 2](http://alfredapp.com) with its paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on.
+ * macOS (OS X) 10.10 or higher
+    * If you only use the `say` keyword, you can use the workflow on older macOS versions too, provided you install it [manually](#manual-installation).
+ * [Alfred 3](http://alfredapp.com) with its paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on.
  * The global TTS keyboard shortcut must be activated:
     * Open `System Preferences`.
     * In pane `Dication & Speech`, anchor `Text to Speech`, ensure that `Speak selected text when the key is pressed` is _checked_.
@@ -163,13 +163,13 @@ With [Node.js](http://nodejs.org/) installed, install [the package](https://www.
 **Note**:
 
 * Whether you need `sudo` depends on how you installed Node.js and whether you've [changed permissions later](https://docs.npmjs.com/getting-started/fixing-npm-permissions); if you get an `EACCES` error, try again with `sudo`.
-* Alfred 2 will prompt you to import the workflow - select a category (optional; "Tools" recommended), and confirm.
+* Alfred 3 will prompt you to import the workflow - select a category (optional; "Tools" recommended), and confirm.
 * After importing, proceed with [customization](#customization) below.
 
 ## Manual installation
 
 * **Click [here](https://github.com/mklement0/speak.awf/blob/stable/archive/net.same2u.speak.awf.alfredworkflow?raw=true)** to download the installer.
-* Open the downloaded file: Alfred 2 will prompt you to import the workflow - select a category (optional; "Tools" recommended), and confirm.
+* Open the downloaded file: Alfred 3 will prompt you to import the workflow - select a category (optional; "Tools" recommended), and confirm.
 * After importing, proceed with [customization](#customization) below.
 
 # Customization
@@ -190,8 +190,8 @@ Customization has two to three parts:
 * Assign a hotkey to each such voice.
 * _If_ you've chosen a _custom_ hotkey for the `Speak selected text when the key is pressed` system feature (not recommended): see the next chapter.
 
-Unless already there right after having installed the workflow, open Alfred 2's `Preferences...` dialog 
-via Alfred 2's menu-bar icon and locate workflow `Speak Active App's Text`.
+Unless already there right after having installed the workflow, open Alfred 3's `Preferences...` dialog 
+via Alfred 3's menu-bar icon and locate workflow `Speak Active App's Text`.
 
 The workflow comes with three predefined hotkey-based definitions, based on 
 preinstalled voices "Alex", "Vicki", and "Victoria"
@@ -229,7 +229,7 @@ with the text currenctly selected in the active application:
 
 # License
 
-Copyright (c) 2015 Michael Klement <mklement0@gmail.com> (http://same2u.net), released under the [MIT license](https://spdx.org/licenses/MIT#licenseText).
+Copyright (c) 2015-2016 Michael Klement <mklement0@gmail.com> (http://same2u.net), released under the [MIT license](https://spdx.org/licenses/MIT#licenseText).
 
 ## Acknowledgements
 
@@ -254,6 +254,10 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.4.0](https://github.com/mklement0/speak.awf/compare/v0.3.5...v0.4.0)** (2016-10-02):
+  * [breaking change] Updated to work with Alfred 3. 
+    If you still need Alfred 2 support, download v0.3.5.
 
 * **[v0.3.5](https://github.com/mklement0/speak.awf/compare/v0.3.4...v0.3.5)** (2015-11-08):
   * [doc] `README.md` link to current installer fixed.

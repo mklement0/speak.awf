@@ -157,7 +157,7 @@ getInstalledWfsRootFolder() {
   if [[ -n $parentFolder ]]; then
     [[ ${parentFolder:0:1} == '~' ]] && parentFolder="$HOME${parentFolder:1}"
   else # look in default location
-    parentFolder="$HOME/Library/Application Support/Alfred 2"
+    parentFolder="$HOME/Library/Application Support/Alfred 3"
   fi
   folder="$parentFolder/Alfred.alfredpreferences"
   [[ -d $folder ]] || die "Cannot locate Alfred's user preferences folder: $folder"
@@ -165,7 +165,7 @@ getInstalledWfsRootFolder() {
 }
 
 
-# Returns the full path of the Alfred 2 workflow folder hosting the workflow with the specified bundle ID.
+# Returns the full path of the Alfred 3 workflow folder hosting the workflow with the specified bundle ID.
 # If there is no such workflow, the exit code is set to 1 and nothing is output.
 getInstalledWfFolderByBundleId() {
   local bundleId=$1 wfRootFolder
@@ -202,11 +202,11 @@ case $1 in
 $kTHIS_NAME [-u]
 
 No arguments:
-  Opens this package's *.alfredworkflow archive so as to prompt Alfred 2
+  Opens this package's *.alfredworkflow archive so as to prompt Alfred 3
   to import it, thereby installing the workflow.
 
 -u
-  Uninstalls this package's workflow from Alfred 2, using the bundle ID
+  Uninstalls this package's workflow from Alfred 3, using the bundle ID
   to identify it.
 EOF
     ;;
@@ -253,9 +253,9 @@ bundleid=$(/usr/libexec/PlistBuddy -c 'print :bundleid' "$plistFile")
 
 # set | egrep '^npm_'
 
-# Sanity check: is Alfred 2 installed?
-alfredVer=$(osascript -e 'version of application "Alfred 2"')
-[[ -n $alfredVer ]] || die "'Alfred 2' must be installed to install this workflow - see http://alfredapp.com"
+# Sanity check: is Alfred 3 installed?
+alfredVer=$(osascript -e 'version of application "Alfred 3"')
+[[ -n $alfredVer ]] || die "'Alfred 3' must be installed to install this workflow - see http://alfredapp.com"
 
 if (( uninstall )); then
 
@@ -299,10 +299,10 @@ else # install
   cat <<EOF
 Installing workflow $packageName by opening '$wfArchiveFile'...
 
- * Alfred 2 will open and show a confirmation prompt.
+ * Alfred 3 will open and show a confirmation prompt.
  * CAVEAT: If you uninstall this package later with \`npm rm -g $packageName\`, 
            there will be NO confirmation prompt before removing the workflow
-           from Alfred 2.
+           from Alfred 3.
 
 EOF
   # NOTE: Alfred will invariably PROMPT to import (including a visually prominent warning when
