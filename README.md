@@ -5,7 +5,7 @@
 
 **Contents**
 
-- [speak.awf &mdash; Alfred 3 TTS (text-to-speech) workflows](#speakawf-&mdash-alfred-3-tts-text-to-speech-workflows)
+- [speak.awf &mdash; Alfred 3 TTS (text-to-speech) workflows](#speakawf-mdash-alfred-3-tts-text-to-speech-workflows)
   - [Speaking the active application's text with a specific voice](#speaking-the-active-applications-text-with-a-specific-voice)
   - [Speak specified text with one or more voices](#speak-specified-text-with-one-or-more-voices)
     - [Feature summary](#feature-summary)
@@ -45,7 +45,12 @@ If you know that a voice is installed, yet it doesn't show up in the workflows,
 make sure it has a check mark in `System Preferences > Dictation & Speech > Text to Speech > Systme Voice > Customize...`.  
 This is also where you download additional voices.  
 You can get there more quickly from either the `speak` or `say` keywords with no arguments by pressing `⌥↩` (Option+Return). 
-  
+
+**_Caveat_: Currently, only voices provided by _Apple_ are supported**, not 
+third-party voices such as [InfoVox iVox](http://www.assistiveware.com/product/infovox-ivox).
+
+
+
 <sup>See also: CLI [voices](https://github.com/mklement0/voices), which this workflow uses behind the scenes.</sup>
 
 ## Speaking the active application's text with a specific voice
@@ -229,7 +234,7 @@ with the text currenctly selected in the active application:
 
 # License
 
-Copyright (c) 2015-2016 Michael Klement <mklement0@gmail.com> (http://same2u.net), released under the [MIT license](https://spdx.org/licenses/MIT#licenseText).
+Copyright (c) 2015-2017 Michael Klement <mklement0@gmail.com> (http://same2u.net), released under the [MIT license](https://spdx.org/licenses/MIT#licenseText).
 
 ## Acknowledgements
 
@@ -254,6 +259,10 @@ This project gratefully depends on the following open-source components, accordi
 Versioning complies with [semantic versioning (semver)](http://semver.org/).
 
 <!-- NOTE: An entry template for a new version is automatically added each time `make version` is called. Fill in changes afterwards. -->
+
+* **[v0.4.2](https://github.com/mklement0/speak.awf/compare/v0.4.1...v0.4.2)** (2017-01-03):
+  * [doc] Lack of support for third-party voices noted.
+  * [fix] Invoking System Preferences to manage installed voices now works on macOS Sierra.
 
 * **[v0.4.1](https://github.com/mklement0/speak.awf/compare/v0.3.5...v0.4.0)** (2016-10-02):
   * [breaking change] Updated to work with Alfred 3. 

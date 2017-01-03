@@ -2,7 +2,7 @@
   "name": "speak.awf",
   "description": "Alfred 3 workflow for using macOS's text-to-speech features",
   "private": false,
-  "version": "0.4.1",
+  "version": "0.4.2",
   "os": [
     "darwin"
   ],

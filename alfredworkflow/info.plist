@@ -195,7 +195,7 @@
 
 if [[ $qry == '(manage)' ]]; then
 
-  ./manageVoices
+    ./voices -m
 
 else
 
@@ -322,11 +322,10 @@ fi
 voice="{query}"
 
 if [[ -z $voice ]]; then # invoked on default voice -&gt; open System Preferences to manage voices
-  ./manageVoices
+  ./voices -m
 else
   ./voices -qd "$voice"  2&gt;&amp;1 &amp;&amp; echo "$voice is now the default voice."
-fi
-</string>
+fi</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -377,6 +376,10 @@ tell application "Alfred 3" to search "speak "</string>
 				<integer>3</integer>
 				<key>argumenttext</key>
 				<string>Alex</string>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
 				<key>hotkey</key>
 				<integer>18</integer>
 				<key>hotmod</key>
@@ -430,6 +433,10 @@ tell application "Alfred 3" to search "speak "</string>
 				<integer>3</integer>
 				<key>argumenttext</key>
 				<string>Vicki</string>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
 				<key>hotkey</key>
 				<integer>19</integer>
 				<key>hotmod</key>
@@ -483,6 +490,10 @@ tell application "Alfred 3" to search "speak "</string>
 				<integer>3</integer>
 				<key>argumenttext</key>
 				<string>Victoria</string>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
 				<key>hotkey</key>
 				<integer>20</integer>
 				<key>hotmod</key>
@@ -542,7 +553,7 @@ qry="{query}"
 # voices in System Preferences (in addition to supporting ⌥↩).
 if [[ $qry == '(manage)' ]]; then
 
-  ./manageVoices
+    ./voices -m
 
 else # otherwise: speak with the specified voice(s)
 
@@ -604,14 +615,13 @@ qry="{query}"
 # In any of these cases we interpret this to mean: manage the active voices in System Preferences.
 if [[ $qry == '~' || $qry == '(manage)' || $qry == *,* ]]; then 
 
-  ./manageVoices
+   ./voices -m
 
 else # Invoked on specific voice: make it the new default voice.
 
   ./changeDefaultVoice "$qry"
 
-fi
-</string>
+fi</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -738,6 +748,10 @@ tell application "Alfred 3" to search "say"</string>
 				<integer>0</integer>
 				<key>argument</key>
 				<integer>1</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
 				<key>hotkey</key>
 				<integer>0</integer>
 				<key>hotmod</key>
