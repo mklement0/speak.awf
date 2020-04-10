@@ -5,7 +5,7 @@
 
 **Contents**
 
-- [speak.awf &mdash; Alfred 3 TTS (text-to-speech) workflows](#speakawf-mdash-alfred-3-tts-text-to-speech-workflows)
+- [speak.awf &mdash; Alfred 3+ TTS (text-to-speech) workflows](#speakawf-mdash-alfred-3-tts-text-to-speech-workflows)
   - [Speaking the active application's text with a specific voice](#speaking-the-active-applications-text-with-a-specific-voice)
   - [Speak specified text with one or more voices](#speak-specified-text-with-one-or-more-voices)
     - [Feature summary](#feature-summary)
@@ -24,11 +24,11 @@
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# speak.awf &mdash; Alfred 3 TTS (text-to-speech) workflows
+# speak.awf &mdash; Alfred 3+ TTS (text-to-speech) workflows
 
-An **[Alfred 3](http://alfredapp.com) workflow** that **uses macOS's TTS (text-to-speech) feature to speak text aloud**,
+An **[Alfred](http://alfredapp.com) workflow** that **uses macOS's TTS (text-to-speech) feature to speak text aloud**,
 especially for **multi-lingual use** (macOS allows on-demand download of voices in other languages).  
-<sup>Note: Use of workflows in Alfred 3 requires the paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on - an investment well worth making.</sup>
+<sup>Note: Use of workflows in Alfred requires the paid [Power Pack](https://www.alfredapp.com/powerpack/) add-on - an investment well worth making.</sup>
 
 The workflow comes with two distinct feature groups:
 
@@ -46,9 +46,12 @@ make sure it has a check mark in `System Preferences > Dictation & Speech > Text
 This is also where you download additional voices.  
 You can get there more quickly from either the `speak` or `say` keywords with no arguments by pressing `⌥↩` (Option+Return). 
 
-**_Caveat_: Currently, only voices provided by _Apple_ are supported**, not 
+**Caveats**: 
+
+* Only voices provided by _Apple_ are supported, not 
 third-party voices such as [InfoVox iVox](http://www.assistiveware.com/product/infovox-ivox).
 
+* Additionally, as of macOS 10.15, _Siri_ voices are _not_ supported, due to lack of API support ([see this Stack Overflow question](https://stackoverflow.com/q/61122378/45375)).
 
 
 <sup>See also: CLI [voices](https://github.com/mklement0/voices), which this workflow uses behind the scenes.</sup>
