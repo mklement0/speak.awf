@@ -51,7 +51,7 @@ You can get there more quickly from either the `speak` or `say` keywords with no
 * Only voices provided by _Apple_ are supported, not 
 third-party voices such as [InfoVox iVox](http://www.assistiveware.com/product/infovox-ivox).
 
-* Additionally, as of macOS 10.15, _Siri_ voices are _not_ supported, due to lack of API support ([see this Stack Overflow question](https://stackoverflow.com/q/61122378/45375)).
+* Additionally, as of macOS 10.15, _Siri_ voices are _not_ supported, due to lack of API support (see [this Stack Overflow question](https://stackoverflow.com/q/61122378/45375)).
 
 
 <sup>See also: CLI [voices](https://github.com/mklement0/voices), which this workflow uses behind the scenes.</sup>
